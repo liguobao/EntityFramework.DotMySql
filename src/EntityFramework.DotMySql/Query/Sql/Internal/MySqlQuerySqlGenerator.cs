@@ -18,8 +18,8 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
         protected override string ConcatOperator => "||";
         protected override string TrueLiteral => "TRUE";
         protected override string FalseLiteral => "FALSE";
-        protected override string TypedTrueLiteral => "TRUE::bool";
-        protected override string TypedFalseLiteral => "FALSE::bool";
+        protected override string TypedTrueLiteral => "TRUE";
+        protected override string TypedFalseLiteral => "FALSE";
 
         public MySqlQuerySqlGenerator(
             [NotNull] IRelationalCommandBuilderFactory commandBuilderFactory,
@@ -59,14 +59,13 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
         {
             Check.NotNull(countExpression, nameof(countExpression));
 
-            // Note that PostgreSQL COUNT(*) is BIGINT (64-bit). For 32-bit Count() expressions we cast.
             if (countExpression.Type == typeof(long))
             {
                 Sql.Append("COUNT(*)");
             }
             else if (countExpression.Type == typeof(int))
             {
-                Sql.Append("COUNT(*)::INT4");
+                Sql.Append("CAST(COUNT(*) AS UNSIGNED)");
             }
             else throw new NotSupportedException($"Count expression with type {countExpression.Type} not supported");
 
@@ -80,7 +79,7 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
             // In PostgreSQL SUM() doesn't return the same type as its argument for smallint, int and bigint.
             // Cast to get the same type.
             // http://www.postgresql.org/docs/current/static/functions-aggregate.html
-            if (sumExpression.Type == typeof(short))
+            /*if (sumExpression.Type == typeof(short))
             {
                 Sql.Append("::INT2");
             }
@@ -92,7 +91,7 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
             {
                 Sql.Append("::INT8");
             }
-
+            */
             return sumExpression;
         }
 

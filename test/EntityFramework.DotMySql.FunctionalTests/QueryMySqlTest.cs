@@ -21,6 +21,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             : base(fixture)
         {
             //TestSqlLoggerFactory.CaptureOutput(testOutputHelper);
+
+            Console.WriteLine("Test");
         }
 
         public override void Default_if_empty_top_level()
@@ -42,9 +44,10 @@ WHERE `c`.`EmployeeID` = -1",
                 @"SELECT `e1`.`EmployeeID`, `e1`.`City`, `e1`.`Country`, `e1`.`FirstName`, `e1`.`ReportsTo`, `e1`.`Title`
 FROM `Employees` AS `e1`
 WHERE `e1`.`FirstName` = (
-    SELECT TOP(1) `e`.`FirstName`
+    SELECT `e`.`FirstName`
     FROM `Employees` AS `e`
     ORDER BY `e`.`EmployeeID`
+    LIMIT 1
 )",
                 Sql);
         }
@@ -96,9 +99,10 @@ FROM `Employees` AS `e2`",
                 @"SELECT `e1`.`EmployeeID`, `e1`.`City`, `e1`.`Country`, `e1`.`FirstName`, `e1`.`ReportsTo`, `e1`.`Title`
 FROM `Employees` AS `e1`
 
-SELECT TOP(1) `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
+SELECT `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
 FROM `Employees` AS `e`
-ORDER BY `e`.`EmployeeID`",
+ORDER BY `e`.`EmployeeID`
+LIMIT 1",
                 Sql);
         }
 
@@ -110,9 +114,10 @@ ORDER BY `e`.`EmployeeID`",
                 @"SELECT `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
 FROM `Employees` AS `e`
 WHERE `e`.`Title` = (
-    SELECT TOP(1) `e2`.`Title`
+    SELECT `e2`.`Title`
     FROM `Employees` AS `e2`
     ORDER BY `e2`.`Title`
+    LIMIT 1
 )",
                 Sql);
         }
@@ -122,8 +127,9 @@ WHERE `e`.`Title` = (
             base.Select_Subquery_Single();
 
             Assert.Equal(
-                @"SELECT TOP(2) `od`.`OrderID`
+                @"SELECT `od`.`OrderID`
 FROM `Order Details` AS `od`
+LIMIT 2
 
 SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
 FROM `Orders` AS `o`
@@ -172,12 +178,14 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `t0`.`EmployeeID`, `t0`.`City`, `t0`.`Country`, `t0`.`FirstName`, `t0`.`ReportsTo`, `t0`.`Title`, `t1`.`OrderID`, `t1`.`CustomerID`, `t1`.`EmployeeID`, `t1`.`OrderDate`
 FROM (
-    SELECT TOP(9) `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
+    SELECT `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
     FROM `Employees` AS `e`
+    LIMIT 9
 ) AS `t0`
 CROSS JOIN (
-    SELECT TOP(1000) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
+    LIMIT 1000
 ) AS `t1`",
                 Sql);
         }
@@ -850,9 +858,10 @@ OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
             Assert.Equal(
                 @"SELECT `t0`.*
 FROM (
-    SELECT TOP(10) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+    SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
     FROM `Customers` AS `c`
     ORDER BY `c`.`ContactName`
+    LIMIT 10
 ) AS `t0`
 ORDER BY `t0`.`ContactName`
 OFFSET 5 ROWS",
@@ -870,9 +879,10 @@ OFFSET 5 ROWS",
 FROM (
     SELECT `t0`.*
     FROM (
-        SELECT TOP(10) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+        SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
         FROM `Customers` AS `c`
         ORDER BY `c`.`ContactName`
+        LIMIT 10
     ) AS `t0`
     ORDER BY `t0`.`ContactName`
     OFFSET 5 ROWS
@@ -892,8 +902,9 @@ FROM (
             Assert.Equal(
                 @"SELECT COUNT(*)
 FROM (
-    SELECT DISTINCT TOP(5) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT DISTINCT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
+    LIMIT 5
 ) AS `t0`",
                 Sql);
         }
@@ -905,9 +916,10 @@ FROM (
             Assert.Equal(
                 @"SELECT COUNT(*)
 FROM (
-    SELECT DISTINCT TOP(5) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT DISTINCT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
     WHERE `o`.`CustomerID` = 'FRANK'
+    LIMIT 5
 ) AS `t0`",
                 Sql);
         }
@@ -949,8 +961,9 @@ FROM `Customers` AS `c3`",
             Assert.Equal(
                 @"SELECT `t0`.`City`
 FROM (
-    SELECT TOP(91) `c`.*
+    SELECT `c`.*
     FROM `Customers` AS `c`
+    LIMIT 91
 ) AS `t0`",
                 Sql);
         }
@@ -960,8 +973,9 @@ FROM (
             base.Queryable_simple_anonymous_subquery();
 
             Assert.Equal(
-                @"SELECT TOP(91) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
-FROM `Customers` AS `c`",
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+FROM `Customers` AS `c`
+LIMIT 91",
                 Sql);
         }
 
@@ -970,9 +984,10 @@ FROM `Customers` AS `c`",
             base.Take_simple();
 
             Assert.Equal(
-                @"SELECT TOP(10) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-ORDER BY `c`.`CustomerID`",
+ORDER BY `c`.`CustomerID`
+LIMIT 10",
                 Sql);
         }
 
@@ -981,9 +996,10 @@ ORDER BY `c`.`CustomerID`",
             base.Take_simple_projection();
 
             Assert.Equal(
-                @"SELECT TOP(10) `c`.`City`
+                @"SELECT `c`.`City`
 FROM `Customers` AS `c`
-ORDER BY `c`.`CustomerID`",
+ORDER BY `c`.`CustomerID`
+LIMIT 10",
                 Sql);
         }
 
@@ -994,9 +1010,10 @@ ORDER BY `c`.`CustomerID`",
             Assert.Equal(
                 @"SELECT `t0`.`City`
 FROM (
-    SELECT TOP(2) `c`.*
+    SELECT `c`.*
     FROM `Customers` AS `c`
     ORDER BY `c`.`CustomerID`
+    LIMIT 2
 ) AS `t0`",
                 Sql);
         }
@@ -1008,9 +1025,10 @@ FROM (
             Assert.Equal(
                 @"SELECT COUNT(*)
 FROM (
-    SELECT TOP(5) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
     ORDER BY `o`.`OrderID`
+    LIMIT 5
 ) AS `t0`",
                 Sql);
         }
@@ -1022,8 +1040,9 @@ FROM (
             Assert.Equal(
                 @"SELECT COUNT(*)
 FROM (
-    SELECT TOP(5) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
+    LIMIT 5
 ) AS `t0`",
                 Sql);
         }
@@ -1148,8 +1167,9 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `t0`.`EmployeeID`
 FROM (
-    SELECT TOP(9) `e`.*
+    SELECT `e`.*
     FROM `Employees` AS `e`
+    LIMIT 9
 ) AS `t0`",
                 Sql);
         }
@@ -1299,9 +1319,10 @@ ORDER BY `c`.`CustomerID`",
             base.Last();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1321,10 +1342,11 @@ WHERE `c`.`CustomerID` = 'ALFKI'",
             base.Last_Predicate();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 WHERE `c`.`City` = 'London'
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1333,10 +1355,11 @@ ORDER BY `c`.`ContactName` DESC",
             base.Where_Last();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 WHERE `c`.`City` = 'London'
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1345,9 +1368,10 @@ ORDER BY `c`.`ContactName` DESC",
             base.LastOrDefault();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1356,10 +1380,11 @@ ORDER BY `c`.`ContactName` DESC",
             base.LastOrDefault_Predicate();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 WHERE `c`.`City` = 'London'
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1368,10 +1393,11 @@ ORDER BY `c`.`ContactName` DESC",
             base.Where_LastOrDefault();
 
             Assert.Equal(
-                @"SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 WHERE `c`.`City` = 'London'
-ORDER BY `c`.`ContactName` DESC",
+ORDER BY `c`.`ContactName` DESC
+LIMIT 1",
                 Sql);
         }
 
@@ -1819,8 +1845,9 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `t0`.`EmployeeID`, `t0`.`City`, `t0`.`Country`, `t0`.`FirstName`, `t0`.`ReportsTo`, `t0`.`Title`, `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM (
-    SELECT TOP(9) `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
+    SELECT `e`.`EmployeeID`, `e`.`City`, `e`.`Country`, `e`.`FirstName`, `e`.`ReportsTo`, `e`.`Title`
     FROM `Employees` AS `e`
+    LIMIT 9
 ) AS `t0`
 CROSS JOIN `Customers` AS `c`",
                 Sql);
@@ -2041,9 +2068,10 @@ FROM `Customers` AS `c`",
                 @"SELECT `c`.`ContactName`, `t0`.`OrderID`
 FROM `Customers` AS `c`
 INNER JOIN (
-    SELECT TOP(5) `o2`.*
+    SELECT `o2`.*
     FROM `Orders` AS `o2`
     ORDER BY `o2`.`OrderID`
+    LIMIT 5
 ) AS `t0` ON `c`.`CustomerID` = `t0`.`CustomerID`
 WHERE `t0`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -2068,9 +2096,10 @@ FROM `Customers` AS `c`",
             base.Join_customers_orders_with_subquery_anonymous_property_method_with_take();
 
             Assert.Equal(
-                @"SELECT TOP(5) `o2`.`OrderID`, `o2`.`CustomerID`, `o2`.`EmployeeID`, `o2`.`OrderDate`
+                @"SELECT `o2`.`OrderID`, `o2`.`CustomerID`, `o2`.`EmployeeID`, `o2`.`OrderDate`
 FROM `Orders` AS `o2`
 ORDER BY `o2`.`OrderID`
+LIMIT 5
 
 SELECT `c`.`CustomerID`
 FROM `Customers` AS `c`",
@@ -2100,10 +2129,11 @@ FROM `Customers` AS `c`",
                 @"SELECT `c`.`ContactName`, `t0`.`OrderID`
 FROM `Customers` AS `c`
 INNER JOIN (
-    SELECT TOP(5) `o2`.*
+    SELECT `o2`.*
     FROM `Orders` AS `o2`
     WHERE `o2`.`OrderID` > 0
     ORDER BY `o2`.`OrderID`
+    LIMIT 5
 ) AS `t0` ON `c`.`CustomerID` = `t0`.`CustomerID`
 WHERE `t0`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -2338,9 +2368,10 @@ ORDER BY `c`.`City`, `c`.`CustomerID`",
                 @"SELECT `t0`.`OrderID`, `t0`.`CustomerID`, `t0`.`EmployeeID`, `t0`.`OrderDate`
 FROM `Customers` AS `c`
 LEFT JOIN (
-    SELECT TOP(4) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
     ORDER BY `o`.`OrderID`
+    LIMIT 4
 ) AS `t0` ON `c`.`CustomerID` = `t0`.`CustomerID`
 ORDER BY `c`.`CustomerID`",
                 Sql);
@@ -2392,9 +2423,10 @@ FROM `Orders` AS `o`",
                 @"SELECT `c`.`CustomerID`, `t0`.`OrderID`, `t0`.`CustomerID`, `t0`.`EmployeeID`, `t0`.`OrderDate`, `c`.`ContactName`
 FROM `Customers` AS `c`
 CROSS APPLY (
-    SELECT TOP(1000) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
     WHERE `o`.`CustomerID` = `c`.`CustomerID`
+    LIMIT 1000
 ) AS `t0`",
                 Sql);
         }
@@ -2404,12 +2436,14 @@ CROSS APPLY (
             base.Take_with_single();
 
             Assert.Equal(
-                @"SELECT TOP(2) `t0`.*
+                @"SELECT `t0`.*
 FROM (
-    SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+    SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
     FROM `Customers` AS `c`
     ORDER BY `c`.`CustomerID`
-) AS `t0`",
+    LIMIT 1
+) AS `t0`
+LIMIT 2",
                 Sql);
         }
 
@@ -2418,13 +2452,15 @@ FROM (
             base.Take_with_single_select_many();
 
             Assert.Equal(
-                @"SELECT TOP(2) `t0`.*
+                @"SELECT `t0`.*
 FROM (
-    SELECT TOP(1) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`, `o`.`OrderID`, `o`.`CustomerID` AS `c0`, `o`.`EmployeeID`, `o`.`OrderDate`
+    SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`, `o`.`OrderID`, `o`.`CustomerID` AS `c0`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Customers` AS `c`
     CROSS JOIN `Orders` AS `o`
     ORDER BY `c`.`CustomerID`, `o`.`OrderID`
-) AS `t0`",
+    LIMIT 1
+) AS `t0`
+LIMIT 2",
                 Sql);
         }
 
@@ -2577,9 +2613,10 @@ ORDER BY `t0`.`CustomerID`",
             base.Take_Distinct();
 
             Assert.Equal(
-                @"SELECT DISTINCT TOP(5) `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+                @"SELECT DISTINCT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
 FROM `Orders` AS `o`
-ORDER BY `o`.`OrderID`",
+ORDER BY `o`.`OrderID`
+LIMIT 5",
                 Sql);
         }
 
@@ -2679,12 +2716,13 @@ WHERE 1 = 0",
         public override void Where_primitive()
         {
             base.Where_primitive();
-
+            Console.WriteLine(Sql);
             Assert.Equal(
                 @"SELECT `t0`.`EmployeeID`
 FROM (
-    SELECT TOP(9) `e`.`EmployeeID`
+    SELECT `e`.`EmployeeID`
     FROM `Employees` AS `e`
+    LIMIT 9
 ) AS `t0`
 WHERE `t0`.`EmployeeID` = 5",
                 Sql);
@@ -2980,9 +3018,10 @@ WHERE `c`.`City` IS NULL AND (`c`.`Country` = 'UK')",
             base.Single_Predicate();
 
             Assert.Equal(
-                @"SELECT TOP(2) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+                @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`CustomerID` = 'ALFKI'",
+WHERE `c`.`CustomerID` = 'ALFKI'
+LIMIT 2",
                 Sql);
         }
 
@@ -4053,9 +4092,10 @@ WHERE COALESCE(`c`.`CompanyName`, `c`.`ContactName`) = 'The Big Cheese'",
 FROM (
     SELECT `t0`.*
     FROM (
-        SELECT TOP(10) `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+        SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
         FROM `Customers` AS `c`
         ORDER BY COALESCE(`c`.`Region`, 'ZZ')
+        LIMIT 10
     ) AS `t0`
     ORDER BY COALESCE(`t0`.`Region`, 'ZZ')
     OFFSET 5 ROWS
@@ -4066,9 +4106,10 @@ FROM (
         {
             base.Select_take_null_coalesce_operator();
 
-            Assert.Equal(@"SELECT TOP(5) `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
+            Assert.Equal(@"SELECT `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
 FROM `Customers` AS `c`
-ORDER BY `Coalesce`", Sql);
+ORDER BY `Coalesce`
+LIMIT5", Sql);
         }
 
         [ConditionalFact]
@@ -4080,9 +4121,10 @@ ORDER BY `Coalesce`", Sql);
             Assert.Equal(
                 @"SELECT `t0`.*
 FROM (
-    SELECT TOP(10) `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
+    SELECT `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
     FROM `Customers` AS `c`
     ORDER BY `Coalesce`
+    LIMIT 10
 ) AS `t0`
 ORDER BY `Coalesce`
 OFFSET 5 ROWS",
