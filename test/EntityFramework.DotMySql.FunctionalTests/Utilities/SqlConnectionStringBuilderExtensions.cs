@@ -32,7 +32,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 integratedSecurity = DefaultIntegratedSecurity;
             }
 
-            builder.IntegratedSecurity = integratedSecurity;
+            //builder.IntegratedSecurity = integratedSecurity;
 
             builder.Server = string.IsNullOrEmpty(config[DataSourceKeyword]) ? DefaultDataSource : config[DataSourceKeyword];
 
