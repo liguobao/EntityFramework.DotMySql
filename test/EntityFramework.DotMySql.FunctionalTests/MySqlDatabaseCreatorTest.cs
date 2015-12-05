@@ -132,7 +132,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             using (var testDatabase = await MySqlTestStore.CreateScratchAsync(createDatabase: true))
             {
-                await testDatabase.ExecuteNonQueryAsync("CREATE TABLE SomeTable (Id uniqueidentifier)");
+                await testDatabase.ExecuteNonQueryAsync("CREATE TABLE SomeTable (Id char(38,0))");
 
                 var creator = GetDatabaseCreator(testDatabase);
 

@@ -334,7 +334,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                 //command.Dispose();
 
-                return (int)result > 0;
+                return Convert.ToInt32(result) > 0;
 
             }
         }
