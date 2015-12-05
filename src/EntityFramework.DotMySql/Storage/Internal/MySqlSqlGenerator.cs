@@ -17,7 +17,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
             => Check.NotEmpty(identifier, nameof(identifier)).Replace("\"", "\"\"");
 
         public override string DelimitIdentifier([NotNull] string identifier)
-            => $"\"{EscapeIdentifier(Check.NotEmpty(identifier, nameof(identifier)))}\"";
+            => $"`{EscapeIdentifier(Check.NotEmpty(identifier, nameof(identifier)))}`";
 
         protected override string GenerateLiteralValue(byte[] literal)
         {

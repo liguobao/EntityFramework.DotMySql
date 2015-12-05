@@ -109,7 +109,8 @@ namespace Microsoft.Data.Entity.Storage.Internal
                     { typeof(short), _smallint },
                     { typeof(float), _float },
                     { typeof(decimal), _decimal },
-                    { typeof(TimeSpan), _time }
+                    { typeof(TimeSpan), _time },
+                    { typeof(string), _nchar }
                 };
         }
 

@@ -32,6 +32,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     .BuildServiceProvider();
 
             _options = BuildOptions();
+
+            
         }
 
         protected DbContextOptions BuildOptions()

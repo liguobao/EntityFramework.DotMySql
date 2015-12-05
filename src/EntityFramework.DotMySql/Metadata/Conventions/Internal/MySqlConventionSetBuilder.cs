@@ -3,8 +3,10 @@
 
 // ReSharper disable once CheckNamespace
 
+using EntityFramework.DotMySql.Metadata.Conventions.Internal;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Storage;
+using Microsoft.Data.Entity.Utilities;
 
 namespace Microsoft.Data.Entity.Metadata.Conventions.Internal
 {
@@ -13,6 +15,18 @@ namespace Microsoft.Data.Entity.Metadata.Conventions.Internal
         public MySqlConventionSetBuilder([NotNull] IRelationalTypeMapper typeMapper)
             : base(typeMapper)
         {
+        }
+
+
+        public override ConventionSet AddConventions(ConventionSet conventionSet)
+        {
+            Check.NotNull(conventionSet, nameof(conventionSet));
+
+            base.AddConventions(conventionSet);
+
+            conventionSet.ModelInitializedConventions.Add(new MySqlValueGenerationStrategyConvention());
+
+            return conventionSet;
         }
 
         // TODO: SqlServer has identity here, do we need something?

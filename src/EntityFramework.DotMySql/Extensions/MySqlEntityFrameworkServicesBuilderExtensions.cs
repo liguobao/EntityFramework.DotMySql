@@ -42,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddSingleton<MySqlMigrationsAnnotationProvider>()
                 // TODO: MySqlModelValidator
                 .AddScoped<MySqlConventionSetBuilder>()
-                .AddScoped<MySqlUpdateSqlGenerator>()
+                .AddScoped<IMySqlUpdateSqlGenerator, MySqlUpdateSqlGenerator>()
                 .AddScoped<MySqlModificationCommandBatchFactory>()
                 .AddScoped<MySqlDatabaseProviderServices>()
                 .AddScoped<MySqlRelationalConnection>()
