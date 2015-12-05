@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DotMySql", "src\DotMySql\DotMySql.xproj", "{9D13B739-62B1-4190-B386-7A9547304EB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3B72000B-2DA3-47D6-AC12-0E95323BCB92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE234F4F-25EC-4615-9943-61F3F91B0972}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DotMySql.Tests", "test\DotMySql.Tests\DotMySql.Tests.xproj", "{E9C258D7-0D8E-4E6A-9857-5C6438591755}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EntityFramework.DotMySql", "src\EntityFramework.DotMySql\EntityFramework.DotMySql.xproj", "{51AA8838-1F44-49DF-A02F-AA56A0944B53}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EntityFramework.DotMySql.FunctionalTests", "test\EntityFramework.DotMySql.FunctionalTests\EntityFramework.DotMySql.FunctionalTests.xproj", "{C19FFA42-BA18-45A4-88E7-24279CEB9BF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D13B739-62B1-4190-B386-7A9547304EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D13B739-62B1-4190-B386-7A9547304EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D13B739-62B1-4190-B386-7A9547304EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D13B739-62B1-4190-B386-7A9547304EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C258D7-0D8E-4E6A-9857-5C6438591755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C258D7-0D8E-4E6A-9857-5C6438591755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C258D7-0D8E-4E6A-9857-5C6438591755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C258D7-0D8E-4E6A-9857-5C6438591755}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51AA8838-1F44-49DF-A02F-AA56A0944B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51AA8838-1F44-49DF-A02F-AA56A0944B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51AA8838-1F44-49DF-A02F-AA56A0944B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51AA8838-1F44-49DF-A02F-AA56A0944B53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C19FFA42-BA18-45A4-88E7-24279CEB9BF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C19FFA42-BA18-45A4-88E7-24279CEB9BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C19FFA42-BA18-45A4-88E7-24279CEB9BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C19FFA42-BA18-45A4-88E7-24279CEB9BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9D13B739-62B1-4190-B386-7A9547304EB3} = {3B72000B-2DA3-47D6-AC12-0E95323BCB92}
+		{E9C258D7-0D8E-4E6A-9857-5C6438591755} = {CE234F4F-25EC-4615-9943-61F3F91B0972}
+		{51AA8838-1F44-49DF-A02F-AA56A0944B53} = {3B72000B-2DA3-47D6-AC12-0E95323BCB92}
+		{C19FFA42-BA18-45A4-88E7-24279CEB9BF2} = {CE234F4F-25EC-4615-9943-61F3F91B0972}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>EntityFramework7.MySql</id>
+    <title>MySql for Entity Framework 7</title>
+    <version>3.1.0-beta7-1</version>
+    <authors>Shay Rojansky</authors>
+    <owners>Shay Rojansky</owners>
+    <licenseUrl>https://github.com/MySql/MySql/blob/develop/LICENSE.txt</licenseUrl>
+    <projectUrl>http://www.MySql.org</projectUrl>
+    <copyright>Copyright 2002 - 2015 MySql Development Team</copyright>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>PostgreSQL provider for Entity Framework 7</description>
+    <summary>PostgreSQL provider for Entity Framework 7</summary>
+    <language>en-US</language>
+    <tags>MySql postgresql postgres data database entity framework ef orm</tags>
+    <dependencies>
+      <dependency id="MySql" version="[3.1.0-alpha1]" />
+      <dependency id="EntityFramework.Relational" version="[7.0.0-beta7]" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\EntityFramework7.MySql.dll" target="lib\net45"/>
+    <file src="bin\Release\EntityFramework7.MySql.pdb" target="lib\net45"/>
+    <file src="bin\Release\EntityFramework7.MySql.xml" target="lib\net45"/>
+    <file src="**\*.cs" target="src" />
+  </files>
+</package>

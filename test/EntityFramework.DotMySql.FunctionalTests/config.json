@@ -1,0 +1,12 @@
+{
+    "Test": {
+        "MySql": {
+            "DataSource": "localhost",
+            "IntegratedSecurity": false,
+            "ConnectTimeout": 30,
+            "UserID": "root",
+          "Password": null,
+          "Pooling":  false
+        }
+    }
+}
