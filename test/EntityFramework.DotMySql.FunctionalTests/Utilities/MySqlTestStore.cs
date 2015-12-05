@@ -359,11 +359,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     // SET SINGLE_USER will close any open connections that would prevent the drop
                     command.CommandText
-                        = string.Format(@"IF EXISTS (SELECT * FROM sys.databases WHERE name = N'{0}')
-                                          BEGIN
-                                              ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                                              DROP DATABASE [{0}];
-                                          END", name);
+                        = string.Format(@"DROP DATABASE IF EXISTS `{0}`", name);
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -382,11 +378,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     // SET SINGLE_USER will close any open connections that would prevent the drop
                     command.CommandText
-                        = string.Format(@"IF EXISTS (SELECT * FROM sys.databases WHERE name = N'{0}')
-                                          BEGIN
-                                              ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                                              DROP DATABASE [{0}];
-                                          END", name);
+                        = string.Format(@"DROP DATABASE IF EXISTS `{0}`", name);
 
                     command.ExecuteNonQuery();
                 }
