@@ -8,9 +8,9 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class RowNumberPagingTest : QueryTestBase<NorthwindRowNumberPagingQuerySqlServerFixture>, IDisposable
+    public class RowNumberPagingTest : QueryTestBase<NorthwindRowNumberPagingQueryMySqlFixture>, IDisposable
     {
-        public RowNumberPagingTest(NorthwindRowNumberPagingQuerySqlServerFixture fixture, ITestOutputHelper testOutputHelper)
+        public RowNumberPagingTest(NorthwindRowNumberPagingQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
             : base(fixture)
         {
             //TestSqlLoggerFactory.CaptureOutput(testOutputHelper);
@@ -168,7 +168,7 @@ WHERE [t1].[__RowNumber__] > 5", Sql);
 
         public override void String_Contains_Literal()
         {
-            // skip. This is covered in QuerySqlServerTest
+            // skip. This is covered in QueryMySqlTest
             // base.String_Contains_Literal()
         }
 

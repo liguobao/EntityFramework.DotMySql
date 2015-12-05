@@ -72,7 +72,7 @@ namespace DotMySql.Tests
             cmd.Dispose();
         }
 
-        [Theory]
+        /*[Theory]
         [InlineData(TestUtil.PrepareOrNot.NotPrepared)]
         [InlineData(TestUtil.PrepareOrNot.Prepared)]
         public void MultipleQueriesSingleRow(TestUtil.PrepareOrNot prepare)
@@ -87,6 +87,6 @@ namespace DotMySql.Tests
             Assert.False(reader.NextResult());
             reader.Close();
             cmd.Dispose();
-        }
+        }*/
     }
 }

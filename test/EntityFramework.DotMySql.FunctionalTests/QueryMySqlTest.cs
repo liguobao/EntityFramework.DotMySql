@@ -15,9 +15,9 @@ using System.Threading;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class QuerySqlServerTest : QueryTestBase<NorthwindQueryMySqlFixture>
+    public class QueryMySqlTest : QueryTestBase<NorthwindQueryMySqlFixture>
     {
-        public QuerySqlServerTest(NorthwindQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
+        public QueryMySqlTest(NorthwindQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
             : base(fixture)
         {
             //TestSqlLoggerFactory.CaptureOutput(testOutputHelper);

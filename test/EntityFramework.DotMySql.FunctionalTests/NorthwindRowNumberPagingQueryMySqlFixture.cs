@@ -5,7 +5,7 @@ using Microsoft.Data.Entity.Infrastructure;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class NorthwindRowNumberPagingQuerySqlServerFixture : NorthwindQueryMySqlFixture
+    public class NorthwindRowNumberPagingQueryMySqlFixture : NorthwindQueryMySqlFixture
     {
         protected override void ConfigureOptions(MySqlDbContextOptionsBuilder MySqlDbContextOptionsBuilder)
         {
