@@ -46,12 +46,12 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
 
             if (selectExpression.Offset != null)
             {
-                if (selectExpression.Limit == null) {
+                if (selectExpression.Limit == null)
+                {
                     // if we want to use Skip() without Take() we have to define the upper limit of LIMIT 
                     Sql.AppendLine().Append("LIMIT ").Append(18446744073709551610);
-                } else {
-                    Sql.Append(' ');
                 }
+                Sql.Append(' ');
                 Sql.Append("OFFSET ").Append(selectExpression.Offset);
             }
         }
@@ -98,20 +98,22 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
 
         protected override Expression VisitBinary(BinaryExpression binaryExpression)
         {
-            // PostgreSQL 9.4 and below has some weird operator precedence fixed in 9.5 and described here:
-            // http://git.postgresql.org/gitweb/?p=postgresql.git&a=commitdiff&h=c6b3c939b7e0f1d35f4ed4996e71420a993810d2
-            // As a result we must surround string concatenation with parentheses
             if (binaryExpression.NodeType == ExpressionType.Add &&
                 binaryExpression.Left.Type == typeof (string) &&
                 binaryExpression.Right.Type == typeof (string))
             {
-                Sql.Append("(");
-                var exp = base.VisitBinary(binaryExpression);
+                Sql.Append("CONCAT(");
+                //var exp = base.VisitBinary(binaryExpression);
+                Visit(binaryExpression.Left);
+                Sql.Append(",");
+                var exp = Visit(binaryExpression.Right);
                 Sql.Append(")");
                 return exp;
             }
-
-            return base.VisitBinary(binaryExpression);
+            
+            var expr = base.VisitBinary(binaryExpression);
+            
+            return expr;
         }
 
         // See http://www.postgresql.org/docs/current/static/functions-matching.html
@@ -165,5 +167,7 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
             Sql.Append('\'');
             return atTimeZoneExpression;
         }
+
+        
     }
 }

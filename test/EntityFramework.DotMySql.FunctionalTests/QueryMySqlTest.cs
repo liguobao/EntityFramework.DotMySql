@@ -203,7 +203,7 @@ WHERE (
             SELECT 1
             FROM `Customers` AS `c2`
             WHERE `c1`.`CustomerID` = `c2`.`CustomerID`)
-        THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        THEN TRUE ELSE FALSE
     END
 ) = 1",
                 Sql);
@@ -517,7 +517,7 @@ WHERE `c`.`City` = @__city_0",
             base.Count_with_predicate();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE `o`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -528,7 +528,7 @@ WHERE `o`.`CustomerID` = 'ALFKI'",
             base.Where_OrderBy_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE `o`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -539,7 +539,7 @@ WHERE `o`.`CustomerID` = 'ALFKI'",
             base.OrderBy_Where_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE `o`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -550,7 +550,7 @@ WHERE `o`.`CustomerID` = 'ALFKI'",
             base.OrderBy_Count_with_predicate();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE `o`.`CustomerID` = 'ALFKI'",
                 Sql);
@@ -561,7 +561,7 @@ WHERE `o`.`CustomerID` = 'ALFKI'",
             base.OrderBy_Where_Count_with_predicate();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE (`o`.`OrderID` > 10) AND ((`o`.`CustomerID` <> 'ALFKI') OR `o`.`CustomerID` IS NULL)",
                 Sql);
@@ -582,7 +582,7 @@ FROM `Orders` AS `o`",
             base.Where_OrderBy_Count_client_eval_mixed();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Orders` AS `o`
 WHERE `o`.`OrderID` > 10",
                 Sql);
@@ -787,7 +787,7 @@ FROM (
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 ORDER BY `c`.`CustomerID`
-OFFSET 5 ROWS",
+LIMIT 18446744073709551610 OFFSET 5",
                 Sql);
         }
 
@@ -800,8 +800,7 @@ OFFSET 5 ROWS",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-ORDER BY @@ROWCOUNT
-OFFSET 5 ROWS",
+LIMIT 18446744073709551610 OFFSET 5",
                 Sql);
         }
 
@@ -815,7 +814,7 @@ OFFSET 5 ROWS",
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
 ORDER BY `c`.`ContactName`
-OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY",
+LIMIT 10 OFFSET 5",
                 Sql);
         }
 
@@ -830,7 +829,7 @@ OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY",
 FROM `Customers` AS `c`
 INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`
 ORDER BY `o`.`OrderID`
-OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
+LIMIT 5 OFFSET 10",
                 Sql);
         }
 
@@ -841,11 +840,11 @@ OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
             base.Join_Customers_Orders_Projection_With_String_Concat_Skip_Take();
 
             Assert.Equal(
-                @"SELECT (`c`.`ContactName` + ' ') + `c`.`ContactTitle`, `o`.`OrderID`
+                @"SELECT CONCAT(CONCAT(`c`.`ContactName`,' '),`c`.`ContactTitle`), `o`.`OrderID`
 FROM `Customers` AS `c`
 INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`
 ORDER BY `o`.`OrderID`
-OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
+LIMIT 5 OFFSET 10",
                 Sql);
         }
 
@@ -864,7 +863,7 @@ FROM (
     LIMIT 10
 ) AS `t0`
 ORDER BY `t0`.`ContactName`
-OFFSET 5 ROWS",
+LIMIT 18446744073709551610 OFFSET 5",
                 Sql);
         }
 
@@ -885,7 +884,7 @@ FROM (
         LIMIT 10
     ) AS `t0`
     ORDER BY `t0`.`ContactName`
-    OFFSET 5 ROWS
+    LIMIT 18446744073709551610 OFFSET 5
 ) AS `t1`",
                 Sql);
         }
@@ -900,7 +899,7 @@ FROM (
             base.Take_Distinct_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT DISTINCT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
@@ -914,7 +913,7 @@ FROM (
             base.Take_Where_Distinct_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT DISTINCT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
@@ -1023,7 +1022,7 @@ FROM (
             base.OrderBy_Take_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
@@ -1038,7 +1037,7 @@ FROM (
             base.Take_OrderBy_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
     FROM `Orders` AS `o`
@@ -1056,7 +1055,7 @@ FROM (
     WHEN EXISTS (
         SELECT 1
         FROM `Customers` AS `c`)
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -1070,8 +1069,8 @@ END",
     WHEN EXISTS (
         SELECT 1
         FROM `Customers` AS `c`
-        WHERE `c`.`ContactName` LIKE 'A' + '%')
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        WHERE `c`.`ContactName` LIKE CONCAT('A','%'))
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -1094,8 +1093,8 @@ END",
     WHEN NOT (EXISTS (
         SELECT 1
         FROM `Customers` AS `c`
-        WHERE NOT (`c`.`ContactName` LIKE 'A' + '%')))
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        WHERE NOT (`c`.`ContactName` LIKE CONCAT('A','%'))))
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -1155,7 +1154,7 @@ FROM `Customers` AS `c`",
             base.Select_anonymous_bool_constant_in_expression();
 
             Assert.Equal(
-                @"SELECT `c`.`CustomerID`, LEN(`c`.`CustomerID`) + 5
+                @"SELECT `c`.`CustomerID`, LENGTH(`c`.`CustomerID`) + 5
 FROM `Customers` AS `c`",
                 Sql);
         }
@@ -1917,7 +1916,7 @@ CROSS JOIN `Employees` AS `e3`",
             base.SelectMany_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Customers` AS `c`
 CROSS JOIN `Orders` AS `o`",
                 Sql);
@@ -1928,7 +1927,7 @@ CROSS JOIN `Orders` AS `o`",
             base.SelectMany_LongCount();
 
             Assert.Equal(
-                @"SELECT COUNT_BIG(*)
+                @"SELECT COUNT(*)
 FROM `Customers` AS `c`
 CROSS JOIN `Orders` AS `o`",
                 Sql);
@@ -1944,7 +1943,7 @@ CROSS JOIN `Orders` AS `o`",
         SELECT 1
         FROM `Customers` AS `c`
         CROSS JOIN `Orders` AS `o`)
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2028,7 +2027,7 @@ FROM `Employees` AS `e3`",
             base.Join_Where_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Customers` AS `c`
 INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`
 WHERE `c`.`CustomerID` = 'ALFKI'",
@@ -2040,7 +2039,7 @@ WHERE `c`.`CustomerID` = 'ALFKI'",
             base.Join_OrderBy_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM `Customers` AS `c`
 INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`",
                 Sql);
@@ -2651,7 +2650,7 @@ ORDER BY `c`.`Country`, `c`.`CustomerID`",
     WHEN EXISTS (
         SELECT 1
         FROM `Customers` AS `c`)
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2669,7 +2668,7 @@ ORDER BY (
             SELECT 1
             FROM `Customers` AS `c2`
             WHERE `c2`.`CustomerID` = `c`.`CustomerID`)
-        THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        THEN TRUE ELSE FALSE
     END
 )",
                 Sql);
@@ -2692,10 +2691,10 @@ WHERE (
                     WHEN EXISTS (
                         SELECT 1
                         FROM `Employees` AS `e3`)
-                    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+                    THEN TRUE ELSE FALSE
                 END
             ) = 1)
-        THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        THEN TRUE ELSE FALSE
     END
 ) = 1
 ORDER BY `e1`.`EmployeeID`",
@@ -2757,7 +2756,7 @@ WHERE `p`.`Discontinued` = 0",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 1",
+WHERE `p`.`Discontinued` = TRUE",
                 Sql);
         }
 
@@ -2825,7 +2824,7 @@ WHERE ((`p`.`ProductID` > 100) AND `p`.`Discontinued` = 1) OR (`p`.`Discontinued
 FROM `Products` AS `p`
 WHERE `p`.`Discontinued` = CASE
     WHEN `p`.`ProductID` > 50
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2839,7 +2838,7 @@ END",
 FROM `Products` AS `p`
 WHERE `p`.`Discontinued` <> CASE
     WHEN `p`.`ProductID` > 50
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2864,10 +2863,10 @@ WHERE `p`.`Discontinued` = `p`.`Discontinued`",
 FROM `Products` AS `p`
 WHERE CASE
     WHEN `p`.`ProductID` > 50
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END = CASE
     WHEN `p`.`ProductID` > 20
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2883,7 +2882,7 @@ SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock
 FROM `Products` AS `p`
 WHERE CASE
     WHEN `p`.`ProductID` > 50
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END <> @__prm_0",
                 Sql);
         }
@@ -2900,9 +2899,9 @@ FROM `Products` AS `p`
 WHERE `p`.`Discontinued` = CASE
     WHEN CASE
         WHEN `p`.`ProductID` > 50
-        THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+        THEN TRUE ELSE FALSE
     END <> @__prm_0
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -3074,7 +3073,7 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE 'M' + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT('M','%')",
                 Sql);
         }
 
@@ -3085,7 +3084,7 @@ WHERE `c`.`ContactName` LIKE 'M' + '%'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE `c`.`ContactName` + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT(`c`.`ContactName`,'%')",
                 Sql);
         }
 
@@ -3096,7 +3095,7 @@ WHERE `c`.`ContactName` LIKE `c`.`ContactName` + '%'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE `c`.`ContactName` + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT(`c`.`ContactName`,'%')",
                 Sql);
         }
 
@@ -3117,7 +3116,7 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE '%' + 'b'",
+WHERE `c`.`ContactName` LIKE CONCAT('%','b')",
                 Sql);
         }
 
@@ -3128,7 +3127,7 @@ WHERE `c`.`ContactName` LIKE '%' + 'b'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE '%' + `c`.`ContactName`",
+WHERE `c`.`ContactName` LIKE CONCAT('%',`c`.`ContactName`)",
                 Sql);
         }
 
@@ -3139,7 +3138,7 @@ WHERE `c`.`ContactName` LIKE '%' + `c`.`ContactName`",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE '%' + `c`.`ContactName`",
+WHERE `c`.`ContactName` LIKE CONCAT('%',`c`.`ContactName`)",
                 Sql);
         }
 
@@ -3163,7 +3162,7 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE ('%' + 'M') + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT(CONCAT('%','M'),'%')",
                 Sql);
         }
 
@@ -3174,7 +3173,7 @@ WHERE `c`.`ContactName` LIKE ('%' + 'M') + '%'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE ('%' + `c`.`ContactName`) + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT(CONCAT('%',`c`.`ContactName`),'%')",
                 Sql);
         }
 
@@ -3185,7 +3184,7 @@ WHERE `c`.`ContactName` LIKE ('%' + `c`.`ContactName`) + '%'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`ContactName` LIKE ('%' + `c`.`ContactName`) + '%'",
+WHERE `c`.`ContactName` LIKE CONCAT(CONCAT('%',`c`.`ContactName`),'%')",
                 Sql);
         }
 
@@ -3286,7 +3285,7 @@ FROM `Customers` AS `c`",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`CustomerID` = 'M' + `c`.`CustomerID`
+WHERE `c`.`CustomerID` = CONCAT('M',`c`.`CustomerID`)
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
@@ -3298,7 +3297,7 @@ WHERE `c`.`CustomerID` > REPLACE('ALFKI', UPPER('ALF'), `c`.`CustomerID`)
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE `c`.`CustomerID` <= 'M' + `c`.`CustomerID`
+WHERE `c`.`CustomerID` <= CONCAT('M',`c`.`CustomerID`)
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
@@ -4098,7 +4097,7 @@ FROM (
         LIMIT 10
     ) AS `t0`
     ORDER BY COALESCE(`t0`.`Region`, 'ZZ')
-    OFFSET 5 ROWS
+    LIMIT 18446744073709551610 OFFSET 5
 ) AS `t1`", Sql);
         }
 
@@ -4109,7 +4108,7 @@ FROM (
             Assert.Equal(@"SELECT `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
 FROM `Customers` AS `c`
 ORDER BY `Coalesce`
-LIMIT5", Sql);
+LIMIT 5", Sql);
         }
 
         [ConditionalFact]
@@ -4127,7 +4126,7 @@ FROM (
     LIMIT 10
 ) AS `t0`
 ORDER BY `Coalesce`
-OFFSET 5 ROWS",
+LIMIT 18446744073709551610 OFFSET 5",
                 Sql);
         }
 
