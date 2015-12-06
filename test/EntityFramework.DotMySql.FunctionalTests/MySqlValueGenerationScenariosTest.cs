@@ -72,7 +72,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public class IdentityColumnWithDefaultValue : TestBase<IdentityColumnWithDefaultValue.BlogContext>
         {
             [ConditionalFact]
-            [SqlServerCondition(SqlServerCondition.SupportsSequences)]
+            [MySqlCondition(SqlServerCondition.SupportsSequences)]
             public void Insert_with_default_value_from_sequence()
             {
                 using (var context = new BlogContext())
@@ -110,7 +110,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public class ReadOnlyIdentityColumnWithDefaultValue : TestBase<ReadOnlyIdentityColumnWithDefaultValue.BlogContext>
         {
             [ConditionalFact]
-            [SqlServerCondition(SqlServerCondition.SupportsSequences)]
+            [MySqlCondition(SqlServerCondition.SupportsSequences)]
             public void Insert_with_default_value_from_sequence()
             {
                 using (var context = new BlogContext())
@@ -514,7 +514,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public class ReadOnlyIdentityColumnWithDefaultValueThrows : TestBase<ReadOnlyIdentityColumnWithDefaultValueThrows.BlogContext>
         {
             [ConditionalFact]
-            [SqlServerCondition(SqlServerCondition.SupportsSequences)]
+            [MySqlCondition(SqlServerCondition.SupportsSequences)]
             public void Insert_explicit_value_throws_when_readonly_before_save()
             {
                 using (var context = new BlogContext())

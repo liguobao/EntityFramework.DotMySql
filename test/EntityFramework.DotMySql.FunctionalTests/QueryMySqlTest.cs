@@ -755,7 +755,7 @@ FROM `Orders` AS `o`",
             base.Distinct_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT DISTINCT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
     FROM `Customers` AS `c`
@@ -769,7 +769,7 @@ FROM (
             base.Select_Distinct_Count();
 
             Assert.Equal(
-                @"SELECT COUNT(*)
+                @"SELECT CAST(COUNT(*) AS UNSIGNED)
 FROM (
     SELECT DISTINCT `c`.`City`
     FROM `Customers` AS `c`
@@ -778,7 +778,7 @@ FROM (
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Skip()
         {
             base.Skip();
@@ -792,7 +792,7 @@ OFFSET 5 ROWS",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Skip_no_orderby()
         {
             base.Skip_no_orderby();
@@ -806,7 +806,7 @@ OFFSET 5 ROWS",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Skip_Take()
         {
             base.Skip_Take();
@@ -820,7 +820,7 @@ OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Join_Customers_Orders_Skip_Take()
         {
             base.Join_Customers_Orders_Skip_Take();
@@ -835,7 +835,7 @@ OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Join_Customers_Orders_Projection_With_String_Concat_Skip_Take()
         {
             base.Join_Customers_Orders_Projection_With_String_Concat_Skip_Take();
@@ -850,7 +850,7 @@ OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Take_Skip()
         {
             base.Take_Skip();
@@ -869,7 +869,7 @@ OFFSET 5 ROWS",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Take_Skip_Distinct()
         {
             base.Take_Skip_Distinct();
@@ -2162,7 +2162,7 @@ INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`",
         INNER JOIN `Orders` AS `or` ON `c`.`CustomerID` = `or`.`CustomerID`
         INNER JOIN `Order Details` AS `od` ON `or`.`OrderID` = `od`.`OrderID`
         WHERE `c`.`City` = 'London')
-    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+    THEN TRUE ELSE FALSE
 END",
                 Sql);
         }
@@ -2485,19 +2485,19 @@ FROM `Customers` AS `c`",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Distinct_Skip() => base.Distinct_Skip();
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Distinct_Skip_Take() => base.Distinct_Skip_Take();
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Skip_Distinct() => base.Skip_Distinct();
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Skip_Take_Distinct() => base.Skip_Take_Distinct();
 
         public override void OrderBy()
@@ -4083,7 +4083,7 @@ WHERE COALESCE(`c`.`CompanyName`, `c`.`ContactName`) = 'The Big Cheese'",
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Take_skip_null_coalesce_operator()
         {
             base.Take_skip_null_coalesce_operator();
@@ -4113,7 +4113,7 @@ LIMIT5", Sql);
         }
 
         [ConditionalFact]
-        [SqlServerCondition(SqlServerCondition.SupportsOffset)]
+        [MySqlCondition(SqlServerCondition.SupportsOffset)]
         public override void Select_take_skip_null_coalesce_operator()
         {
             base.Select_take_skip_null_coalesce_operator();

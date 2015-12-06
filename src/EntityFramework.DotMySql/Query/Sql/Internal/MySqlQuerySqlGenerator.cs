@@ -47,7 +47,8 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
             if (selectExpression.Offset != null)
             {
                 if (selectExpression.Limit == null) {
-                    Sql.AppendLine();
+                    // if we want to use Skip() without Take() we have to define the upper limit of LIMIT 
+                    Sql.AppendLine().Append("LIMIT ").Append(18446744073709551610);
                 } else {
                     Sql.Append(' ');
                 }

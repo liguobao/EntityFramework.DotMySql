@@ -6,7 +6,8 @@
             "ConnectTimeout": 30,
             "UserID": "root",
           "Password": null,
-          "Pooling":  false
+          "Pooling": false,
+          "SupportsSequences":  false
         }
     }
 }

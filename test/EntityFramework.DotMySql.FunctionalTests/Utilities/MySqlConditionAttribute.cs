@@ -8,11 +8,11 @@ using Microsoft.Data.Entity.FunctionalTests.TestUtilities.Xunit;
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class SqlServerConditionAttribute : Attribute, ITestCondition
+    public class MySqlConditionAttribute : Attribute, ITestCondition
     {
         public SqlServerCondition Conditions { get; set; }
 
-        public SqlServerConditionAttribute(SqlServerCondition conditions)
+        public MySqlConditionAttribute(SqlServerCondition conditions)
         {
             Conditions = conditions;
         }
@@ -24,7 +24,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var isMet = true;
                 if (Conditions.HasFlag(SqlServerCondition.SupportsSequences))
                 {
-                    isMet &= TestEnvironment.GetFlag(nameof(SqlServerCondition.SupportsSequences)) ?? true;
+                    isMet &= TestEnvironment.GetFlag(nameof(SqlServerCondition.SupportsSequences)) ?? false;
                 }
                 if (Conditions.HasFlag(SqlServerCondition.SupportsOffset))
                 {

@@ -62,7 +62,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         }
 
         [ConditionalTheory]
-        [SqlServerCondition(SqlServerCondition.SupportsSequences)]
+        [MySqlCondition(SqlServerCondition.SupportsSequences)]
         [InlineData(51, 6)]
         [InlineData(50, 5)]
         [InlineData(20, 2)]
