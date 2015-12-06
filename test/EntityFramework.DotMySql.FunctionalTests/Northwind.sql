@@ -3385,9 +3385,6 @@ INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPe
 INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(75, 'Rhönbräu Klosterbier', 12, 1, '24 - 0.5 l bottles',  7.75, 125, 0, 25, 0);
 INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(76, 'Lakkalikööri', 23, 1, '500 ml',  18.0, 57, 0, 20, 0);
 INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(77, 'Original Frankfurter grüne Soße', 12, 2, '12 boxes',  13.0, 32, 0, 15, 0);
-INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(91, 'testSP', NULL, NULL, NULL,  0.0, 0, 0, 0, 0);
-INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(92, 'testSP', NULL, NULL, NULL,  0.0, 0, 0, 0, 0);
-INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)  VALUES(93, 'testSP', NULL, NULL, NULL,  0.0, 0, 0, 0, 0);
 INSERT INTO Region (RegionID, RegionDescription)  VALUES(1, 'Eastern                                           ');
 INSERT INTO Region (RegionID, RegionDescription)  VALUES(2, 'Western                                           ');
 INSERT INTO Region (RegionID, RegionDescription)  VALUES(3, 'Northern                                          ');

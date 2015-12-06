@@ -205,7 +205,7 @@ WHERE (
             WHERE `c1`.`CustomerID` = `c2`.`CustomerID`)
         THEN TRUE ELSE FALSE
     END
-) = 1",
+) = TRUE",
                 Sql);
         }
 
@@ -259,7 +259,7 @@ WHERE `c`.`City` = @__city_0",
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE @__predicate_0 = 1",
+WHERE @__predicate_0 = TRUE",
                 Sql);
         }
 
@@ -1154,7 +1154,7 @@ FROM `Customers` AS `c`",
             base.Select_anonymous_bool_constant_in_expression();
 
             Assert.Equal(
-                @"SELECT `c`.`CustomerID`, LENGTH(`c`.`CustomerID`) + 5
+                @"SELECT `c`.`CustomerID`, CHAR_LENGTH(`c`.`CustomerID`) + 5
 FROM `Customers` AS `c`",
                 Sql);
         }
@@ -1545,7 +1545,7 @@ WHERE `e`.`ReportsTo` = @__nullableIntPrm_0",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE LEN(`c`.`City`) = 6",
+WHERE CHAR_LENGTH(`c`.`City`) = 6",
                 Sql);
         }
 
@@ -1558,7 +1558,7 @@ WHERE LEN(`c`.`City`) = 6",
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE GETDATE() <> @__myDatetime_0",
+WHERE NOW() <> @__myDatetime_0",
                 Sql);
         }
 
@@ -1571,7 +1571,7 @@ WHERE GETDATE() <> @__myDatetime_0",
 
 SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE GETUTCDATE() <> @__myDatetime_0",
+WHERE UTC_DATE() <> @__myDatetime_0",
                 Sql);
         }
 
@@ -2693,10 +2693,10 @@ WHERE (
                         FROM `Employees` AS `e3`)
                     THEN TRUE ELSE FALSE
                 END
-            ) = 1)
+            ) = TRUE)
         THEN TRUE ELSE FALSE
     END
-) = 1
+) = TRUE
 ORDER BY `e1`.`EmployeeID`",
                 Sql);
         }
@@ -2734,7 +2734,7 @@ WHERE `t0`.`EmployeeID` = 5",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 1",
+WHERE `p`.`Discontinued` = TRUE",
                 Sql);
         }
 
@@ -2745,7 +2745,7 @@ WHERE `p`.`Discontinued` = 1",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 0",
+WHERE `p`.`Discontinued` = FALSE",
                 Sql);
         }
 
@@ -2767,7 +2767,7 @@ WHERE `p`.`Discontinued` = TRUE",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 1",
+WHERE `p`.`Discontinued` = TRUE",
                 Sql);
         }
 
@@ -2778,7 +2778,7 @@ WHERE `p`.`Discontinued` = 1",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 1",
+WHERE `p`.`Discontinued` = TRUE",
                 Sql);
         }
 
@@ -2789,7 +2789,7 @@ WHERE `p`.`Discontinued` = 1",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 0",
+WHERE `p`.`Discontinued` = FALSE",
                 Sql);
         }
 
@@ -2800,7 +2800,7 @@ WHERE `p`.`Discontinued` = 0",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 1",
+WHERE `p`.`Discontinued` = TRUE",
                 Sql);
         }
 
@@ -2811,7 +2811,7 @@ WHERE `p`.`Discontinued` = 1",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE ((`p`.`ProductID` > 100) AND `p`.`Discontinued` = 1) OR (`p`.`Discontinued` = 1)",
+WHERE ((`p`.`ProductID` > 100) AND `p`.`Discontinued` = TRUE) OR (`p`.`Discontinued` = TRUE)",
                 Sql);
         }
 
@@ -2913,7 +2913,7 @@ END",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 0 AND (`p`.`ProductID` >= 20)",
+WHERE `p`.`Discontinued` = FALSE AND (`p`.`ProductID` >= 20)",
                 Sql);
         }
 
@@ -2924,7 +2924,7 @@ WHERE `p`.`Discontinued` = 0 AND (`p`.`ProductID` >= 20)",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE `p`.`Discontinued` = 0 OR (`p`.`ProductID` >= 20)",
+WHERE `p`.`Discontinued` = FALSE OR (`p`.`ProductID` >= 20)",
                 Sql);
         }
 
@@ -2935,7 +2935,7 @@ WHERE `p`.`Discontinued` = 0 OR (`p`.`ProductID` >= 20)",
             Assert.Equal(
                 @"SELECT `p`.`ProductID`, `p`.`Discontinued`, `p`.`ProductName`, `p`.`UnitsInStock`
 FROM `Products` AS `p`
-WHERE (`p`.`Discontinued` = 0 AND (`p`.`ProductID` < 60)) AND (`p`.`ProductID` > 30)",
+WHERE (`p`.`Discontinued` = FALSE AND (`p`.`ProductID` < 60)) AND (`p`.`ProductID` > 30)",
                 Sql);
         }
 
@@ -3447,7 +3447,7 @@ WHERE ROUND(`od`.`UnitPrice`, 0) > 10",
             Assert.Equal(
                 @"SELECT `od`.`OrderID`, `od`.`ProductID`, `od`.`Discount`, `od`.`Quantity`, `od`.`UnitPrice`
 FROM `Order Details` AS `od`
-WHERE ROUND(`od`.`UnitPrice`, 0, 1) > 10",
+WHERE TRUNCATE(`od`.`UnitPrice`, 0) > 10",
                 Sql);
         }
 
@@ -3469,7 +3469,7 @@ WHERE NEWID() <> '00000000-0000-0000-0000-000000000000'",
             Assert.Equal(
                 @"SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
 FROM `Customers` AS `c`
-WHERE POWER(LEN(`c`.`CustomerID`), 2E0) = 25E0",
+WHERE POWER(CHAR_LENGTH(`c`.`CustomerID`), 2E0) = 25E0",
                 Sql);
         }
 

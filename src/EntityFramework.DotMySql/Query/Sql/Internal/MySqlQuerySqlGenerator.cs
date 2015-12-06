@@ -160,11 +160,9 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
         {
             Check.NotNull(atTimeZoneExpression, nameof(atTimeZoneExpression));
 
-            Visit(atTimeZoneExpression.TimestampExpression);
+            //Visit(atTimeZoneExpression.TimestampExpression);
 
-            Sql.Append(" AT TIME ZONE '");
-            Sql.Append(atTimeZoneExpression.TimeZone);
-            Sql.Append('\'');
+            Sql.Append("UTC_DATE()");
             return atTimeZoneExpression;
         }
 

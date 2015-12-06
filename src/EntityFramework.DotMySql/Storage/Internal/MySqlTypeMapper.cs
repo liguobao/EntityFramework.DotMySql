@@ -44,7 +44,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         
         
         
-        private readonly RelationalTypeMapping _uniqueidentifier = new RelationalTypeMapping("char(38,0)", typeof(Guid));
+        private readonly RelationalTypeMapping _uniqueidentifier = new RelationalTypeMapping("char(38)", typeof(Guid));
         private readonly RelationalTypeMapping _time = new RelationalTypeMapping("time", typeof(TimeSpan));
 
 

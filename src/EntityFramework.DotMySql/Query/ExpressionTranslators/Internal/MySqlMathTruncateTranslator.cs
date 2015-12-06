@@ -20,7 +20,7 @@ namespace Microsoft.Data.Entity.Query.ExpressionTranslators.Internal
         {
             if (_methodInfos.Contains(methodCallExpression.Method))
             {
-                return new SqlFunctionExpression("TRUNC", methodCallExpression.Type, new[] { methodCallExpression.Arguments[0] });
+                return new SqlFunctionExpression("TRUNCATE", methodCallExpression.Type, new[] { methodCallExpression.Arguments[0], Expression.Constant(0) });
             }
 
             return null;
