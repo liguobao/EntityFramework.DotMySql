@@ -69,8 +69,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
                 .Build(@"
                     SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
                     FROM information_schema.tables
-                    WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog', 'information_schema')
-                ");
+                    WHERE table_type = 'BASE TABLE' AND table_schema = '" + _connection.DbConnection.Database + "'");
 
         private IEnumerable<IRelationalCommand> CreateCreateOperations()
             => _migrationsSqlGenerationHelper.Generate(new[] { new MySqlCreateDatabaseOperation { Name = _connection.DbConnection.Database } });

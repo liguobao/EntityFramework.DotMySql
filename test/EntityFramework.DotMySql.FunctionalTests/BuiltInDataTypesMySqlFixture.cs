@@ -101,7 +101,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             MapColumnTypes<MappedNullableDataTypes>(modelBuilder);
 
             MapSizedColumnTypes<MappedSizedDataTypes>(modelBuilder);
-            MapSizedColumnTypes<MappedScaledDataTypes>(modelBuilder);
+            MapScaledColumnTypes<MappedScaledDataTypes>(modelBuilder);
             MapPreciseColumnTypes<MappedPrecisionAndScaledDataTypes>(modelBuilder);
         }
 
@@ -115,12 +115,22 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                 if (typeName.EndsWith("Max"))
                 {
-                    typeName = typeName.Substring(0, typeName.IndexOf("Max")) + "(max)";
+                    typeName = typeName.Substring(0, typeName.IndexOf("Max")) + "(8000)";
                 }
 
                 typeName = typeName.Replace('_', ' ');
 
                 entityType.GetOrAddProperty(propertyInfo).Relational().ColumnType = typeName;
+            }
+        }
+
+        private static void MapScaledColumnTypes<TEntity>(ModelBuilder modelBuilder) where TEntity : class
+        {
+            var entityType = modelBuilder.Entity<TEntity>().Metadata;
+
+            foreach (var propertyInfo in entityType.ClrType.GetTypeInfo().DeclaredProperties.Where(p => p.Name != "Id"))
+            {
+                entityType.GetOrAddProperty(propertyInfo).Relational().ColumnType = propertyInfo.Name.Replace('_', ' ') + "(4,1)";
             }
         }
 
@@ -158,41 +168,22 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public short Smallint { get; set; }
         public byte Tinyint { get; set; }
         public bool Bit { get; set; }
-        public decimal Money { get; set; }
-        public decimal Smallmoney { get; set; }
         public float Float { get; set; }
         public double Double_precision { get; set; }
         public double Double { get; set; }
         public DateTime Date { get; set; }
         //public DateTimeOffset Datetimeoffset { get; set; }
-        public DateTime Datetime2 { get; set; }
-        public DateTime Smalldatetime { get; set; }
         public DateTime Datetime { get; set; }
         public TimeSpan Time { get; set; }
         public string Char { get; set; }
         public string Character { get; set; }
-        public string Varchar { get; set; }
-        public string Char_varying { get; set; }
-        public string Character_varying { get; set; }
         public string VarcharMax { get; set; }
-        public string Char_varyingMax { get; set; }
-        public string Character_varyingMax { get; set; }
         public string Nchar { get; set; }
         public string National_character { get; set; }
-        public string Nvarchar { get; set; }
-        public string National_char_varying { get; set; }
-        public string National_character_varying { get; set; }
         public string NvarcharMax { get; set; }
-        public string National_char_varyingMax { get; set; }
-        public string National_character_varyingMax { get; set; }
         public string Text { get; set; }
-        public string Ntext { get; set; }
         public byte[] Binary { get; set; }
-        public byte[] Varbinary { get; set; }
-        public byte[] Binary_varying { get; set; }
         public byte[] VarbinaryMax { get; set; }
-        public byte[] Binary_varyingMax { get; set; }
-        public byte[] Image { get; set; }
         public decimal Decimal { get; set; }
         public decimal Numeric { get; set; }
     }
@@ -204,26 +195,19 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public string Character { get; set; }
         public string Varchar { get; set; }
         public string Char_varying { get; set; }
-        public string Character_varying { get; set; }
         public string Nchar { get; set; }
         public string National_character { get; set; }
         public string Nvarchar { get; set; }
-        public string National_char_varying { get; set; }
-        public string National_character_varying { get; set; }
         public byte[] Binary { get; set; }
         public byte[] Varbinary { get; set; }
-        public byte[] Binary_varying { get; set; }
     }
 
     public class MappedScaledDataTypes
     {
         public int Id { get; set; }
         public float Float { get; set; }
-        public float Double_precision { get; set; }
-        //public DateTimeOffset Datetimeoffset { get; set; }
-        public DateTime Datetime2 { get; set; }
+        public double Double { get; set; }
         public decimal Decimal { get; set; }
-        public decimal Dec { get; set; }
         public decimal Numeric { get; set; }
     }
 
@@ -241,43 +225,22 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public short? Smallint { get; set; }
         public byte? Tinyint { get; set; }
         public bool? Bit { get; set; }
-        public decimal? Money { get; set; }
-        public decimal? Smallmoney { get; set; }
         public float? Float { get; set; }
         public double? Double { get; set; }
         public double? Double_precision { get; set; }
         public DateTime? Date { get; set; }
         //public DateTimeOffset? Datetimeoffset { get; set; }
-        public DateTime? Datetime2 { get; set; }
-        public DateTime? Smalldatetime { get; set; }
         public DateTime? Datetime { get; set; }
         public TimeSpan? Time { get; set; }
         public string Char { get; set; }
         public string Character { get; set; }
-        public string Varchar { get; set; }
-        public string Char_varying { get; set; }
-        public string Character_varying { get; set; }
         public string VarcharMax { get; set; }
-        public string Char_varyingMax { get; set; }
-        public string Character_varyingMax { get; set; }
         public string Nchar { get; set; }
         public string National_character { get; set; }
-        public string Nvarchar { get; set; }
-        public string National_char_varying { get; set; }
-        public string National_character_varying { get; set; }
         public string NvarcharMax { get; set; }
-        public string National_char_varyingMax { get; set; }
-        public string National_character_varyingMax { get; set; }
-        public string Text { get; set; }
-        public string Ntext { get; set; }
         public byte[] Binary { get; set; }
-        public byte[] Varbinary { get; set; }
-        public byte[] Binary_varying { get; set; }
         public byte[] VarbinaryMax { get; set; }
-        public byte[] Binary_varyingMax { get; set; }
-        public byte[] Image { get; set; }
         public decimal? Decimal { get; set; }
-        public decimal? Dec { get; set; }
         public decimal? Numeric { get; set; }
     }
 }

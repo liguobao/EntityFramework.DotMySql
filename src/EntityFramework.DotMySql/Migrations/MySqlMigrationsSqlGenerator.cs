@@ -268,7 +268,7 @@ namespace Microsoft.Data.Entity.Migrations
             Check.NotNull(builder, nameof(builder));
 
             builder
-                .Append("CREATE DATABASE ")
+                .Append("CREATE SCHEMA ")
                 .Append(SqlGenerationHelper.DelimitIdentifier(operation.Name))
                 .AppendLine(SqlGenerationHelper.BatchTerminator);
         }
@@ -446,6 +446,51 @@ namespace Microsoft.Data.Entity.Migrations
             }
         }
 
+        protected override void ForeignKeyConstraint(
+            [NotNull] AddForeignKeyOperation operation,
+            [CanBeNull] IModel model,
+            [NotNull] RelationalCommandListBuilder builder)
+        {
+            Check.NotNull(operation, nameof(operation));
+            Check.NotNull(builder, nameof(builder));
+
+            if (operation.Name != null)
+            {
+                builder
+                    .Append("CONSTRAINT ")
+                    .Append(SqlGenerationHelper.DelimitIdentifier(operation.Name.Substring(0, Math.Min(operation.Name.Length, 64) )))
+                    .Append(" ");
+            }
+
+            builder
+                .Append("FOREIGN KEY (")
+                .Append(ColumnList(operation.Columns))
+                .Append(") REFERENCES ")
+                .Append(SqlGenerationHelper.DelimitIdentifier(operation.PrincipalTable, operation.PrincipalSchema));
+
+            if (operation.PrincipalColumns != null)
+            {
+                builder
+                    .Append(" (")
+                    .Append(ColumnList(operation.PrincipalColumns))
+                    .Append(")");
+            }
+
+            if (operation.OnUpdate != ReferentialAction.NoAction)
+            {
+                builder.Append(" ON UPDATE ");
+                ForeignKeyAction(operation.OnUpdate, builder);
+            }
+
+            if (operation.OnDelete != ReferentialAction.NoAction)
+            {
+                builder.Append(" ON DELETE ");
+                ForeignKeyAction(operation.OnDelete, builder);
+            }
+        }
+
         string ColumnList(string[] columns) => string.Join(", ", columns.Select(SqlGenerationHelper.DelimitIdentifier));
     }
+
+    
 }

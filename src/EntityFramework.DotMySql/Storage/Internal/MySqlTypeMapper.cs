@@ -34,16 +34,18 @@ namespace Microsoft.Data.Entity.Storage.Internal
         private readonly RelationalTypeMapping _tinyint = new RelationalTypeMapping("tinyint", typeof(byte), DbType.Byte);
         
         
-        //private readonly RelationalSizedTypeMapping _rowversion = new RelationalSizedTypeMapping("rowversion", typeof(byte[]), DbType.Binary, 8);
+        private readonly RelationalTypeMapping _rowversion = new RelationalTypeMapping("TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", typeof(byte[]), DbType.Binary);
         private readonly MySqlMaxLengthMapping _nchar = new MySqlMaxLengthMapping("nchar", typeof(string), DbType.StringFixedLength);
         private readonly MySqlMaxLengthMapping _nvarchar = new MySqlMaxLengthMapping("nvarchar", typeof(string));
         private readonly RelationalTypeMapping _varcharmax = new MySqlMaxLengthMapping("varchar(8000)", typeof(string), DbType.AnsiString);
         
         private readonly MySqlMaxLengthMapping _varchar = new MySqlMaxLengthMapping("varchar", typeof(string), DbType.AnsiString);
+        private readonly MySqlMaxLengthMapping _varchar450 = new MySqlMaxLengthMapping("varchar(450)", typeof(string), DbType.AnsiString);
         private readonly RelationalTypeMapping _varbinary = new RelationalTypeMapping("varbinary", typeof(byte[]), DbType.Binary);
-        
-        
-        
+        private readonly MySqlMaxLengthMapping _varbinary450 = new MySqlMaxLengthMapping("varbinary(450)", typeof(byte[]), DbType.Binary);
+        private readonly RelationalTypeMapping _varbinarymax = new RelationalTypeMapping("varbinary(8000)", typeof(byte[]), DbType.Binary);
+
+
         private readonly RelationalTypeMapping _uniqueidentifier = new RelationalTypeMapping("char(38)", typeof(Guid));
         private readonly RelationalTypeMapping _time = new RelationalTypeMapping("time", typeof(TimeSpan));
 
@@ -58,7 +60,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
                 = new Dictionary<string, RelationalTypeMapping>(StringComparer.OrdinalIgnoreCase)
                 {
                     { "bigint", _bigint },
-                    { "binary varying", _varbinary },
+                    //{ "binary varying", _varbinary },
                     { "binary", _varbinary },
                     { "bit", _bit },
                     { "char varying", _varchar },
@@ -109,9 +111,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
                     { typeof(short), _smallint },
                     { typeof(float), _float },
                     { typeof(decimal), _decimal },
-                    { typeof(TimeSpan), _time },
-                    { typeof(string), _nchar },
-                    { typeof(byte[]), _varbinary }
+                    { typeof(TimeSpan), _time }
                 };
         }
 
@@ -119,7 +119,34 @@ namespace Microsoft.Data.Entity.Storage.Internal
 
         protected override string GetColumnType(IProperty property) => property.MySql().ColumnType;
 
-        
+        public override RelationalTypeMapping FindMapping(Type clrType)
+        {
+            Check.NotNull(clrType, nameof(clrType));
+
+            return clrType == typeof(string)
+                ? _varcharmax
+                : (clrType == typeof(byte[])
+                    ? _varbinarymax
+                    : base.FindMapping(clrType));
+        }
+
+        protected override RelationalTypeMapping FindCustomMapping(IProperty property)
+        {
+            Check.NotNull(property, nameof(property));
+
+            var clrType = property.ClrType.UnwrapEnumType();
+
+            return clrType == typeof(string)
+                ? GetStringMapping(
+                    property, 4000,
+                    maxLength => new MySqlMaxLengthMapping("varchar(" + maxLength + ")", typeof(string)), 
+                    _varcharmax, _varcharmax, _varchar450)
+                : clrType == typeof(byte[])
+                    ? GetByteArrayMapping(property, 8000,
+                        maxLength => new MySqlMaxLengthMapping("varbinary(" + maxLength + ")", typeof(byte[]), DbType.Binary),
+                        _varbinarymax, _varbinarymax, _varbinary450, _rowversion)
+                    : null;
+        }
 
         protected override IReadOnlyDictionary<Type, RelationalTypeMapping> GetSimpleMappings()
             => _simpleMappings;
