@@ -32,11 +32,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                         Bit = true,
                         Money = 81.1m,
                         Smallmoney = 82.2m,
-                        Float = 83.3,
-                        Real = 84.4f,
+                        Double = 83.3,
+                        Float = 84.4f,
                         Double_precision = 85.5,
                         Date = new DateTime(2015, 1, 2, 10, 11, 12),
-                        Datetimeoffset = new DateTimeOffset(new DateTime(), TimeSpan.Zero),
+                        //Datetimeoffset = new DateTimeOffset(new DateTime(), TimeSpan.Zero),
                         Datetime2 = new DateTime(),
                         Smalldatetime = new DateTime(2018, 1, 2, 13, 11, 12),
                         Datetime = new DateTime(2019, 1, 2, 14, 11, 12),
@@ -96,10 +96,10 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Smallmoney == param6));
 
                 double? param7a = 83.3;
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Float == param7a));
+                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Double == param7a));
 
                 float? param7b = 84.4f;
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Real == param7b));
+                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Float == param7b));
 
                 double? param7c = 85.5;
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Double_precision == param7c));
@@ -107,8 +107,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 DateTime? param8 = new DateTime(2015, 1, 2);
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Date == param8));
 
-                DateTimeOffset? param9 = new DateTimeOffset(new DateTime(), TimeSpan.Zero);
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Datetimeoffset == param9));
+                //DateTimeOffset? param9 = new DateTimeOffset(new DateTime(), TimeSpan.Zero);
+                //Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Datetimeoffset == param9));
 
                 DateTime? param10 = new DateTime();
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 999 && e.Datetime2 == param10));
@@ -234,10 +234,10 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Smallmoney == param6));
 
                 double? param7a = null;
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Float == param7a));
+                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Double == param7a));
 
                 float? param7b = null;
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Real == param7b));
+                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Float == param7b));
 
                 double? param7c = null;
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Double_precision == param7c));
@@ -245,8 +245,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 DateTime? param8 = null;
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Date == param8));
 
-                DateTimeOffset? param9 = null;
-                Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Datetimeoffset == param9));
+                //DateTimeOffset? param9 = null;
+                //Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Datetimeoffset == param9));
 
                 DateTime? param10 = null;
                 Assert.Same(entity, context.Set<MappedNullableDataTypes>().Single(e => e.Int == 911 && e.Datetime2 == param10));
@@ -358,11 +358,9 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                             Bit = true,
                             Money = 81.1m,
                             Smallmoney = 82.2m,
-                            Float = 83.3,
-                            Real = 84.4f,
+                            Float = 83.3f,
                             Double_precision = 85.5,
                             Date = new DateTime(2015, 1, 2, 10, 11, 12),
-                            Datetimeoffset = new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero),
                             Datetime2 = new DateTime(2017, 1, 2, 12, 11, 12),
                             Smalldatetime = new DateTime(2018, 1, 2, 13, 11, 12),
                             Datetime = new DateTime(2019, 1, 2, 14, 11, 12),
@@ -392,7 +390,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                             Binary_varyingMax = new byte[] { 93, 94, 95, 96 },
                             Image = new byte[] { 97, 98, 99, 100 },
                             Decimal = 101.1m,
-                            Dec = 102.2m,
                             Numeric = 103.3m
                         });
 
@@ -410,11 +407,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Equal(true, entity.Bit);
                 Assert.Equal(81.1m, entity.Money);
                 Assert.Equal(82.2m, entity.Smallmoney);
-                Assert.Equal(83.3, entity.Float);
-                Assert.Equal(84.4f, entity.Real);
+                Assert.Equal(83.3, entity.Double);
+                Assert.Equal(84.4f, entity.Float);
                 Assert.Equal(85.5, entity.Double_precision);
                 Assert.Equal(new DateTime(2015, 1, 2), entity.Date);
-                Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
+                //Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
                 Assert.Equal(new DateTime(2017, 1, 2, 12, 11, 12), entity.Datetime2);
                 Assert.Equal(new DateTime(2018, 1, 2, 13, 11, 00), entity.Smalldatetime);
                 Assert.Equal(new DateTime(2019, 1, 2, 14, 11, 12), entity.Datetime);
@@ -444,7 +441,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Equal(new byte[] { 93, 94, 95, 96 }, entity.Binary_varyingMax);
                 Assert.Equal(new byte[] { 97, 98, 99, 100 }, entity.Image);
                 Assert.Equal(101m, entity.Decimal);
-                Assert.Equal(102m, entity.Dec);
                 Assert.Equal(103m, entity.Numeric);
             }
         }
@@ -464,11 +460,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                             Bit = true,
                             Money = 81.1m,
                             Smallmoney = 82.2m,
-                            Float = 83.3,
-                            Real = 84.4f,
+                            Double = 83.3,
+                            Float = 84.4f,
                             Double_precision = 85.5,
                             Date = new DateTime(2015, 1, 2, 10, 11, 12),
-                            Datetimeoffset = new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero),
+                            //Datetimeoffset = new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero),
                             Datetime2 = new DateTime(2017, 1, 2, 12, 11, 12),
                             Smalldatetime = new DateTime(2018, 1, 2, 13, 11, 12),
                             Datetime = new DateTime(2019, 1, 2, 14, 11, 12),
@@ -516,11 +512,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Equal(true, entity.Bit);
                 Assert.Equal(81.1m, entity.Money);
                 Assert.Equal(82.2m, entity.Smallmoney);
-                Assert.Equal(83.3, entity.Float);
-                Assert.Equal(84.4f, entity.Real);
+                Assert.Equal(83.3, entity.Double);
+                Assert.Equal(84.4f, entity.Float);
                 Assert.Equal(85.5, entity.Double_precision);
                 Assert.Equal(new DateTime(2015, 1, 2), entity.Date);
-                Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
+                //Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
                 Assert.Equal(new DateTime(2017, 1, 2, 12, 11, 12), entity.Datetime2);
                 Assert.Equal(new DateTime(2018, 1, 2, 13, 11, 00), entity.Smalldatetime);
                 Assert.Equal(new DateTime(2019, 1, 2, 14, 11, 12), entity.Datetime);
@@ -580,10 +576,10 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Null(entity.Money);
                 Assert.Null(entity.Smallmoney);
                 Assert.Null(entity.Float);
-                Assert.Null(entity.Real);
+                Assert.Null(entity.Double);
                 Assert.Null(entity.Double_precision);
                 Assert.Null(entity.Date);
-                Assert.Null(entity.Datetimeoffset);
+                //Assert.Null(entity.Datetimeoffset);
                 Assert.Null(entity.Datetime2);
                 Assert.Null(entity.Smalldatetime);
                 Assert.Null(entity.Datetime);
@@ -707,7 +703,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                             Id = 77,
                             Float = 83.3f,
                             Double_precision = 85.5f,
-                            Datetimeoffset = new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero),
+                            //Datetimeoffset = new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero),
                             Datetime2 = new DateTime(2017, 1, 2, 12, 11, 12),
                             Decimal = 101.1m,
                             Dec = 102.2m,
@@ -723,7 +719,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                 Assert.Equal(83.3f, entity.Float);
                 Assert.Equal(85.5f, entity.Double_precision);
-                Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
+                //Assert.Equal(new DateTimeOffset(new DateTime(2016, 1, 2, 11, 11, 12), TimeSpan.Zero), entity.Datetimeoffset);
                 Assert.Equal(new DateTime(2017, 1, 2, 12, 11, 12), entity.Datetime2);
                 Assert.Equal(101m, entity.Decimal);
                 Assert.Equal(102m, entity.Dec);
@@ -741,7 +737,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                         {
                             Id = 77,
                             Decimal = 101.1m,
-                            Dec = 102.2m,
                             Numeric = 103.3m
                         });
 
@@ -753,7 +748,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var entity = context.Set<MappedPrecisionAndScaledDataTypes>().Single(e => e.Id == 77);
 
                 Assert.Equal(101.1m, entity.Decimal);
-                Assert.Equal(102.2m, entity.Dec);
                 Assert.Equal(103.3m, entity.Numeric);
             }
         }

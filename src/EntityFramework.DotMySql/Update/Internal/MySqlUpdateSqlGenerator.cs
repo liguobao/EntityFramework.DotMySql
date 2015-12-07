@@ -120,7 +120,7 @@ namespace Microsoft.Data.Entity.Update.Internal
 
         protected override void AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name, string schema, int commandPosition)
             => Check.NotNull(commandStringBuilder, nameof(commandStringBuilder))
-                .Append("SELECT ROW_COUNT()")
+                .Append("; SELECT ROW_COUNT()")
                 .Append(SqlGenerationHelper.BatchTerminator).AppendLine();
 
         

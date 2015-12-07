@@ -158,11 +158,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public bool Bit { get; set; }
         public decimal Money { get; set; }
         public decimal Smallmoney { get; set; }
-        public double Float { get; set; }
-        public float Real { get; set; }
+        public float Float { get; set; }
         public double Double_precision { get; set; }
+        public double Double { get; set; }
         public DateTime Date { get; set; }
-        public DateTimeOffset Datetimeoffset { get; set; }
+        //public DateTimeOffset Datetimeoffset { get; set; }
         public DateTime Datetime2 { get; set; }
         public DateTime Smalldatetime { get; set; }
         public DateTime Datetime { get; set; }
@@ -192,7 +192,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public byte[] Binary_varyingMax { get; set; }
         public byte[] Image { get; set; }
         public decimal Decimal { get; set; }
-        public decimal Dec { get; set; }
         public decimal Numeric { get; set; }
     }
 
@@ -219,7 +218,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public int Id { get; set; }
         public float Float { get; set; }
         public float Double_precision { get; set; }
-        public DateTimeOffset Datetimeoffset { get; set; }
+        //public DateTimeOffset Datetimeoffset { get; set; }
         public DateTime Datetime2 { get; set; }
         public decimal Decimal { get; set; }
         public decimal Dec { get; set; }
@@ -230,7 +229,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
     {
         public int Id { get; set; }
         public decimal Decimal { get; set; }
-        public decimal Dec { get; set; }
         public decimal Numeric { get; set; }
     }
 
@@ -243,11 +241,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public bool? Bit { get; set; }
         public decimal? Money { get; set; }
         public decimal? Smallmoney { get; set; }
-        public double? Float { get; set; }
-        public float? Real { get; set; }
+        public float? Float { get; set; }
+        public double? Double { get; set; }
         public double? Double_precision { get; set; }
         public DateTime? Date { get; set; }
-        public DateTimeOffset? Datetimeoffset { get; set; }
+        //public DateTimeOffset? Datetimeoffset { get; set; }
         public DateTime? Datetime2 { get; set; }
         public DateTime? Smalldatetime { get; set; }
         public DateTime? Datetime { get; set; }

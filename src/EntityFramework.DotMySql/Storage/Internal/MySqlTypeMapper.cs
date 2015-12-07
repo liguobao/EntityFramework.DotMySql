@@ -40,7 +40,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         private readonly RelationalTypeMapping _varcharmax = new MySqlMaxLengthMapping("varchar(8000)", typeof(string), DbType.AnsiString);
         
         private readonly MySqlMaxLengthMapping _varchar = new MySqlMaxLengthMapping("varchar", typeof(string), DbType.AnsiString);
-        private readonly MySqlMaxLengthMapping _varbinary = new MySqlMaxLengthMapping("varbinary", typeof(byte[]), DbType.Binary);
+        private readonly RelationalTypeMapping _varbinary = new RelationalTypeMapping("varbinary", typeof(byte[]), DbType.Binary);
         
         
         
@@ -110,7 +110,8 @@ namespace Microsoft.Data.Entity.Storage.Internal
                     { typeof(float), _float },
                     { typeof(decimal), _decimal },
                     { typeof(TimeSpan), _time },
-                    { typeof(string), _nchar }
+                    { typeof(string), _nchar },
+                    { typeof(byte[]), _varbinary }
                 };
         }
 

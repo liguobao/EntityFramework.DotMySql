@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         }
 
         protected override bool HasTables()
-            => (bool)CreateHasTablesCommand().ExecuteScalar(_connection);
+            => (bool)Convert.ToBoolean(CreateHasTablesCommand().ExecuteScalar(_connection));
 
         protected override async Task<bool> HasTablesAsync(CancellationToken cancellationToken = default(CancellationToken))
             => (int)(await CreateHasTablesCommand().ExecuteScalarAsync(_connection, cancellationToken: cancellationToken)) != 0;
