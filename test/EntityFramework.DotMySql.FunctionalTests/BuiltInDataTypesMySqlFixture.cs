@@ -59,6 +59,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     b.Ignore(dt => dt.TestUnsignedInt64);
                     b.Ignore(dt => dt.TestCharacter);
                     b.Ignore(dt => dt.TestSignedByte);
+                    b.Ignore(dt => dt.TestDateTimeOffset);
                 });
 
             modelBuilder.Entity<BuiltInNullableDataTypes>(b =>
@@ -68,6 +69,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     b.Ignore(dt => dt.TestNullableUnsignedInt64);
                     b.Ignore(dt => dt.TestNullableCharacter);
                     b.Ignore(dt => dt.TestNullableSignedByte);
+                    b.Ignore(dt => dt.TestNullableDateTimeOffset);
                 });
 
             modelBuilder.Entity<MappedDataTypes>(b =>
