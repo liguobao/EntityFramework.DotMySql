@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class GearsOfWarQuerySqlServerFixture : GearsOfWarQueryRelationalFixture<MySqlTestStore>
+    public class GearsOfWarQueryMySqlFixture : GearsOfWarQueryRelationalFixture<MySqlTestStore>
     {
         public const string DatabaseName = "GearsOfWarQueryTest";
 
@@ -18,7 +18,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
         private readonly string _connectionString = MySqlTestStore.CreateConnectionString(DatabaseName);
 
-        public GearsOfWarQuerySqlServerFixture()
+        public GearsOfWarQueryMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()
@@ -42,7 +42,16 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                         context.Database.EnsureDeleted();
                         if (context.Database.EnsureCreated())
                         {
-                            GearsOfWarModelInitializer.Seed(context);
+                            try
+                            {
+                                GearsOfWarModelInitializer.Seed(context);
+                            }
+                            catch (Exception)
+                            {
+                                TestSqlLoggerFactory.Reset();
+                                throw;
+                            }
+                            
                         }
 
                         TestSqlLoggerFactory.SqlStatements.Clear();

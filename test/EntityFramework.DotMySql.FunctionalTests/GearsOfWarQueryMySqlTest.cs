@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class GearsOfWarQuerySqlServerTest : GearsOfWarQueryTestBase<MySqlTestStore, GearsOfWarQuerySqlServerFixture>
+    public class GearsOfWarQueryMySqlTest : GearsOfWarQueryTestBase<MySqlTestStore, GearsOfWarQueryMySqlFixture>
     {
         public override void Include_multiple_one_to_one_and_one_to_many()
         {
@@ -648,7 +648,7 @@ INNER JOIN [CogTag] AS [t] ON [g].[FullName] = (
                 Sql);
         }
 
-        public GearsOfWarQuerySqlServerTest(GearsOfWarQuerySqlServerFixture fixture, ITestOutputHelper testOutputHelper)
+        public GearsOfWarQueryMySqlTest(GearsOfWarQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
             : base(fixture)
         {
             //TestSqlLoggerFactory.CaptureOutput(testOutputHelper);

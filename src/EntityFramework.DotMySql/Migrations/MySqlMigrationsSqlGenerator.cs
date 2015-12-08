@@ -281,17 +281,6 @@ namespace Microsoft.Data.Entity.Migrations
             var dbName = SqlGenerationHelper.DelimitIdentifier(operation.Name);
 
             builder
-                // TODO: The following revokes connection only for the public role, what about other connecting roles?
-                .Append("REVOKE CONNECT ON DATABASE ")
-                .Append(dbName)
-                .Append(" FROM PUBLIC")
-                .AppendLine(SqlGenerationHelper.BatchTerminator)
-                // TODO: For PG <= 9.1, the column name is prodpic, not pid (see http://stackoverflow.com/questions/5408156/how-to-drop-a-postgresql-database-if-there-are-active-connections-to-it)
-                .Append(
-                    "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '")
-                .Append(operation.Name)
-                .Append("'")
-                .AppendLine(SqlGenerationHelper.BatchTerminator)
                 .Append("DROP DATABASE ")
                 .Append(dbName);
         }
@@ -359,15 +348,15 @@ namespace Microsoft.Data.Entity.Migrations
                 {
                 case "int":
                 case "int4":
-                    type = "serial";
+                    type = "int AUTO_INCREMENT";
                     break;
                 case "bigint":
                 case "int8":
-                    type = "bigserial";
+                    type = "bigint AUTO_INCREMENT";
                     break;
                 case "smallint":
                 case "int2":
-                    type = "smallserial";
+                    type = "short AUTO_INCREMENT";
                     break;
                 default:
                     throw new InvalidOperationException($"Column {name} of type {type} can't be Identity");

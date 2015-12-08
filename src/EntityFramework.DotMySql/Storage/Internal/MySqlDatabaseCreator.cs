@@ -38,6 +38,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
             _sqlCommandBuilder = sqlCommandBuilder;
         }
 
+
         public override void Create()
         {
             using (var masterConnection = _connection.CreateMasterConnection())
@@ -113,7 +114,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         }
 
         // Login failed is thrown when database does not exist (See Issue #776)
-        private static bool IsDoesNotExist(MySqlException exception) => exception.Number == 0x3D000;
+        private static bool IsDoesNotExist(MySqlException exception) => exception.Number == 1049;
 
         public override void Delete()
         {

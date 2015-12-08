@@ -22,6 +22,7 @@
 
 using System.IO;
 using System;
+using System.Data.Common;
 using MySql.Data.MySqlClient.Properties;
 using MySql.Data.Common;
 using System.Text;
@@ -89,7 +90,7 @@ namespace MySql.Data.MySqlClient.Authentication
     protected virtual void AuthenticationFailed(Exception ex)
     {
       string msg = String.Format(Resources.AuthenticationFailed, Settings.Server, GetUsername(), PluginName, ex.Message);
-      throw new MySqlException(msg, ex);
+      throw new MySqlException(msg, ((MySqlException)ex).Number, ex);
     }
 
     protected virtual void AuthenticationSuccessful()

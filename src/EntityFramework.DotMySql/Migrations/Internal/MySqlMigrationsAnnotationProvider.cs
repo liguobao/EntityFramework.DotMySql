@@ -11,6 +11,7 @@ namespace Microsoft.Data.Entity.Migrations.Internal
     {
         public override IEnumerable<IAnnotation> For(IProperty property)
         {
+            
             if (property.ValueGenerated == ValueGenerated.OnAdd &&
                 property.ClrType.IsIntegerForSerial()) {
                 yield return new Annotation(MySqlAnnotationNames.Prefix + MySqlAnnotationNames.Serial, true);

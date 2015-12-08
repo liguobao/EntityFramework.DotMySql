@@ -239,9 +239,9 @@ namespace Microsoft.Data.Entity.Update.Internal
                     ex,
                     ModificationCommands[commandIndex].Entries);
             }
-        }
+        }*/
 
-        protected override async Task ConsumeAsync(
+        /*protected override async Task ConsumeAsync(
             DbDataReader reader,
             CancellationToken cancellationToken = default(CancellationToken))
         {
