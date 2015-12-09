@@ -11,8 +11,8 @@ namespace Microsoft.Data.Entity.FunctionalTests
 {
     public class GearsOfWarFromSqlQueryMySqlTest : GearsOfWarFromSqlQueryTestBase<MySqlTestStore, GearsOfWarQueryMySqlFixture>
     {
-        [Fact]
-        public virtual void From_sql_queryable_simple_columns_out_of_order()
+        
+        public override void From_sql_queryable_simple_columns_out_of_order()
         {
             using (var context = CreateContext())
             {

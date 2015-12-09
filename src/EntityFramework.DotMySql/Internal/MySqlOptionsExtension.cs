@@ -13,6 +13,7 @@ namespace Microsoft.Data.Entity.Internal
     {
         public MySqlOptionsExtension()
         {
+            this.MaxBatchSize = 1;
         }
 
         public MySqlOptionsExtension([NotNull] MySqlOptionsExtension copyFrom)
