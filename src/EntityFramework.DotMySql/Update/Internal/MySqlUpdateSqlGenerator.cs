@@ -71,6 +71,10 @@ namespace Microsoft.Data.Entity.Update.Internal
                 {
                     AppendSelectAffectedCountCommand(commandStringBuilder, name, schema, commandPosition);
                 }
+                else if (readOperations.Length > 0)
+                {
+                    AppendOutputClause(commandStringBuilder, readOperations);
+                }
             }
 
             return defaultValuesOnly
@@ -106,8 +110,10 @@ namespace Microsoft.Data.Entity.Update.Internal
             {
                 AppendSelectAffectedCountCommand(commandStringBuilder, name, schema, commandPosition);
             }
+            
         }
 
+        
         
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void AppendOutputClause(
@@ -115,8 +121,7 @@ namespace Microsoft.Data.Entity.Update.Internal
             IReadOnlyList<ColumnModification> operations)
             => commandStringBuilder
                 .AppendLine()
-                .Append("OUTPUT ")
-                .AppendJoin(operations.Select(c => "INSERTED." + SqlGenerationHelper.DelimitIdentifier(c.ColumnName)));
+                .Append("; SELECT LAST_INSERT_ID();");
 
         protected override void AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name, string schema, int commandPosition)
             => Check.NotNull(commandStringBuilder, nameof(commandStringBuilder))
