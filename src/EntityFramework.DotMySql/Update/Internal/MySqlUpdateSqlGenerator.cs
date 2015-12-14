@@ -18,18 +18,18 @@ namespace Microsoft.Data.Entity.Update.Internal
         {
         }
 
-        public override void AppendInsertOperation(
+        public override ResultSetMapping AppendInsertOperation(
            StringBuilder commandStringBuilder,
            ModificationCommand command, 
            int commandPosition)
         {
             Check.NotNull(command, nameof(command));
 
-            AppendBulkInsertOperation(commandStringBuilder, new[] { command }, commandPosition);
+            return AppendBulkInsertOperation(commandStringBuilder, new[] { command }, commandPosition);
         }
 
 
-        public ResultsGrouping AppendBulkInsertOperation(StringBuilder commandStringBuilder, IReadOnlyList<ModificationCommand> modificationCommands,
+        public ResultSetMapping AppendBulkInsertOperation(StringBuilder commandStringBuilder, IReadOnlyList<ModificationCommand> modificationCommands,
             int commandPosition)
         {
             Check.NotNull(commandStringBuilder, nameof(commandStringBuilder));
@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Update.Internal
             var valueSetCount = defaultValuesOnly
                 ? 1
                 : modificationCommands.Count;
-
+            var resultSetCreated = false;
             for (var i = 0; i < statementCount; i++)
             {
                 var operations = modificationCommands[i].ColumnModifications;
@@ -74,15 +74,18 @@ namespace Microsoft.Data.Entity.Update.Internal
                 else if (readOperations.Length > 0)
                 {
                     AppendOutputClause(commandStringBuilder, readOperations);
+                    resultSetCreated = true;
                 }
             }
 
-            return defaultValuesOnly
-                ? ResultsGrouping.OneCommandPerResultSet
-                : ResultsGrouping.OneResultSet;
+            return resultSetCreated ?
+                defaultValuesOnly
+                    ? ResultSetMapping.LastInResultSet
+                    : ResultSetMapping.NotLastInResultSet
+                : ResultSetMapping.NoResultSet;
         }
 
-        public override void AppendUpdateOperation(
+        public override ResultSetMapping AppendUpdateOperation(
             StringBuilder commandStringBuilder,
             ModificationCommand command,
             int commandPosition)
@@ -108,9 +111,9 @@ namespace Microsoft.Data.Entity.Update.Internal
 
             if (readOperations.Length == 0)
             {
-                AppendSelectAffectedCountCommand(commandStringBuilder, name, schema, commandPosition);
+                return AppendSelectAffectedCountCommand(commandStringBuilder, name, schema, commandPosition);
             }
-            
+            return ResultSetMapping.LastInResultSet;
         }
 
         
@@ -123,12 +126,17 @@ namespace Microsoft.Data.Entity.Update.Internal
                 .AppendLine()
                 .Append("; SELECT LAST_INSERT_ID();");
 
-        protected override void AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name, string schema, int commandPosition)
-            => Check.NotNull(commandStringBuilder, nameof(commandStringBuilder))
+        protected override ResultSetMapping AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name,
+            string schema, int commandPosition)
+        {
+        
+            Check.NotNull(commandStringBuilder, nameof(commandStringBuilder))
                 .Append("; SELECT ROW_COUNT()")
                 .Append(SqlGenerationHelper.BatchTerminator).AppendLine();
 
-        
+            return ResultSetMapping.LastInResultSet;
+        }
+
         public override void AppendBatchHeader(StringBuilder commandStringBuilder)
         {
             Check.NotNull(commandStringBuilder, nameof(commandStringBuilder));

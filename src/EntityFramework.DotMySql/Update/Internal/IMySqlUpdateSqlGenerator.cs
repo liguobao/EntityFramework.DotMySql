@@ -6,7 +6,7 @@ namespace Microsoft.Data.Entity.Update.Internal
 {
     public interface IMySqlUpdateSqlGenerator : IUpdateSqlGenerator
     {
-        ResultsGrouping AppendBulkInsertOperation(
+        ResultSetMapping AppendBulkInsertOperation(
             [NotNull] StringBuilder commandStringBuilder,
             [NotNull] IReadOnlyList<ModificationCommand> modificationCommands,
             int commandPosition);

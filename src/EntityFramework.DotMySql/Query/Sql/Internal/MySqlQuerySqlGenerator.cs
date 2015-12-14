@@ -25,8 +25,9 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
             [NotNull] IRelationalCommandBuilderFactory commandBuilderFactory,
             [NotNull] ISqlGenerationHelper SqlGenerationHelper,
             [NotNull] IParameterNameGeneratorFactory parameterNameGeneratorFactory,
+            [NotNull] IRelationalTypeMapper relationalTypeMapper,
             [NotNull] SelectExpression selectExpression)
-            : base(commandBuilderFactory, SqlGenerationHelper, parameterNameGeneratorFactory, selectExpression)
+            : base(commandBuilderFactory, SqlGenerationHelper, parameterNameGeneratorFactory, relationalTypeMapper, selectExpression)
         {
         }
 

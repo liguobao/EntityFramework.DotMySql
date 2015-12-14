@@ -130,14 +130,40 @@ ORDER BY [c0].[DefaultText], [c0].[DefaultText0]",
                 Sql);
         }
 
-        public override void Join_navigation_translated_to_FK()
+        public override void Join_navigation_key_access_optional()
         {
-            base.Join_navigation_translated_to_FK();
+            base.Join_navigation_key_access_optional();
+
+            Assert.Equal(
+                @"", Sql);
+        }
+
+        public override void Join_navigation_key_access_required()
+        {
+            base.Join_navigation_key_access_required();
 
             Assert.Equal(
                 @"SELECT [e1].[Id], [e2].[Id]
 FROM [Level1] AS [e1]
-INNER JOIN [Level2] AS [e2] ON [e1].[Id] = [e2].[OneToOne_Optional_PK_InverseId]", Sql);
+INNER JOIN [Level2] AS [e2] ON [e1].[Id] = [e2].[Level1_Required_Id]", Sql);
+        }
+
+        public override void Navigation_key_access_optional_comparison()
+        {
+            base.Navigation_key_access_optional_comparison();
+
+            Assert.Equal(
+                @"", Sql);
+        }
+
+        public override void Navigation_key_access_required_comparison()
+        {
+            base.Navigation_key_access_required_comparison();
+
+            Assert.Equal(
+                @"SELECT [e2].[Id]
+FROM [Level2] AS [e2]
+WHERE [e2].[Id] > 5", Sql);
         }
 
         public override void Join_navigation_in_outer_selector_translated_to_extra_join()
