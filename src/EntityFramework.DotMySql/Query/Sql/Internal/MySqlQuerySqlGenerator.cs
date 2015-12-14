@@ -42,7 +42,8 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
 
             if (selectExpression.Limit != null)
             {
-                Sql.AppendLine().Append("LIMIT ").Append(selectExpression.Limit);
+                Sql.AppendLine().Append("LIMIT ");
+                Visit(selectExpression.Limit);
             }
 
             if (selectExpression.Offset != null)
@@ -53,7 +54,8 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
                     Sql.AppendLine().Append("LIMIT ").Append(18446744073709551610);
                 }
                 Sql.Append(' ');
-                Sql.Append("OFFSET ").Append(selectExpression.Offset);
+                Sql.Append("OFFSET ");
+                Visit(selectExpression.Offset);
             }
         }
 
