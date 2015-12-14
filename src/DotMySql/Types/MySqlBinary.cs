@@ -132,7 +132,7 @@ namespace MySql.Data.Types
 
     private static void EscapeByteArray(byte[] bytes, int length, MySqlPacket packet)
     {
-      for (int x = 0; x < length; x++)
+      for (int x = 0; x < Math.Min(length, bytes.Length); x++)
       {
         byte b = bytes[x];
         if (b == '\0')

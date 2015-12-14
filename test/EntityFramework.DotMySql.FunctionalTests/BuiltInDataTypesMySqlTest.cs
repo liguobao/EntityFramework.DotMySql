@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Data.Entity.FunctionalTests;
+using Microsoft.Data.Entity.Metadata;
 using Xunit;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
@@ -16,6 +18,275 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             : base(fixture)
         {
         }
+
+        public override void Can_query_using_any_data_type()
+        {
+            using (var context = CreateContext())
+            {
+                context.Set<BuiltInDataTypes>().Add(
+                    new BuiltInDataTypes
+                    {
+                        Id = 11,
+                        PartitionId = 1,
+                        TestInt16 = -1234,
+                        TestInt32 = -123456789,
+                        TestInt64 = -1234567890123456789L,
+                        TestDouble = -1.23456789,
+                        TestDecimal = -1234567890.01M,
+                        TestDateTime = Fixture.DefaultDateTime,
+                        TestDateTimeOffset = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0)),
+                        TestTimeSpan = new TimeSpan(0, 10, 9, 8, 7),
+                        TestSingle = -1.234F,
+                        TestBoolean = true,
+                        TestByte = 255,
+                        TestUnsignedInt16 = 1234,
+                        TestUnsignedInt32 = 1234565789U,
+                        TestUnsignedInt64 = 1234567890123456789UL,
+                        TestCharacter = 'a',
+                        TestSignedByte = -128,
+                        Enum64 = Enum64.SomeValue,
+                        Enum32 = Enum32.SomeValue,
+                        Enum16 = Enum16.SomeValue,
+                        Enum8 = Enum8.SomeValue
+                    });
+
+                Assert.Equal(1, context.SaveChanges());
+            }
+
+            using (var context = CreateContext())
+            {
+                var entity = context.Set<BuiltInDataTypes>().Single(e => e.Id == 11);
+                var entityType = context.Model.FindEntityType(typeof(BuiltInDataTypes));
+
+                var param1 = (short)-1234;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestInt16 == param1));
+
+                var param2 = -123456789;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestInt32 == param2));
+
+                var param3 = -1234567890123456789L;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestInt64 == param3));
+
+                var param4 = -1.23456789;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestDouble == param4));
+
+                var param5 = -1234567890.01M;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestDecimal == param5));
+
+                var param6 = Fixture.DefaultDateTime;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestDateTime == param6));
+
+                if (entityType.FindProperty("TestDateTimeOffset") != null)
+                {
+                    var param7 = new DateTimeOffset(new DateTime(), TimeSpan.FromHours(-8.0));
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestDateTimeOffset == param7));
+                }
+
+                if (entityType.FindProperty("TestTimeSpan") != null)
+                {
+                    var param8 = new TimeSpan(0, 10, 9, 8, 7);
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestTimeSpan == param8));
+                }
+
+
+
+                var param9 = -1.2354F;
+
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestSingle == param9));
+
+                var param10 = true;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestBoolean == param10));
+
+                if (entityType.FindProperty("TestByte") != null)
+                {
+                    var param11 = (byte)255;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestByte == param11));
+                }
+
+                var param12 = Enum64.SomeValue;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.Enum64 == param12));
+
+                var param13 = Enum32.SomeValue;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.Enum32 == param13));
+
+                var param14 = Enum16.SomeValue;
+                Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.Enum16 == param14));
+
+                if (entityType.FindProperty("TestEnum8") != null)
+                {
+                    var param15 = Enum8.SomeValue;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.Enum8 == param15));
+                }
+
+                if (entityType.FindProperty("TestUnsignedInt16") != null)
+                {
+                    var param16 = (ushort)1234;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestUnsignedInt16 == param16));
+                }
+
+                if (entityType.FindProperty("TestUnsignedInt32") != null)
+                {
+                    var param17 = 1234565789U;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestUnsignedInt32 == param17));
+                }
+
+                if (entityType.FindProperty("TestUnsignedInt64") != null)
+                {
+                    var param18 = 1234567890123456789UL;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestUnsignedInt64 == param18));
+                }
+
+                if (entityType.FindProperty("TestCharacter") != null)
+                {
+                    var param19 = 'a';
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestCharacter == param19));
+                }
+
+                if (entityType.FindProperty("TestSignedByte") != null)
+                {
+                    var param20 = (sbyte)-128;
+                    Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestSignedByte == param20));
+                }
+            }
+        }
+
+        public override void Can_perform_query_with_max_length()
+        {
+            var shortString = "Sky";
+            var shortBinary = new byte[] { 8, 8, 7, 8, 7 };
+            var longString = new string('X', 8000);
+            var longBinary = new byte[8000];
+            for (var i = 0; i < longBinary.Length; i++)
+            {
+                longBinary[i] = (byte)(i);
+            }
+
+            using (var context = CreateContext())
+            {
+                context.Set<MaxLengthDataTypes>().Add(
+                    new MaxLengthDataTypes
+                    {
+                        Id = 799,
+                        String3 = shortString,
+                        ByteArray5 = shortBinary,
+                        String9000 = longString,
+                        ByteArray9000 = longBinary
+                    });
+
+                Assert.Equal(1, context.SaveChanges());
+            }
+
+            using (var context = CreateContext())
+            {
+                Assert.NotNull(context.Set<MaxLengthDataTypes>().SingleOrDefault(e => e.Id == 799 && e.String3 == shortString));
+                Assert.NotNull(context.Set<MaxLengthDataTypes>().SingleOrDefault(e => e.Id == 799 && e.ByteArray5 == shortBinary));
+
+                Assert.NotNull(context.Set<MaxLengthDataTypes>().SingleOrDefault(e => e.Id == 799 && e.String9000 == longString));
+                Assert.NotNull(context.Set<MaxLengthDataTypes>().SingleOrDefault(e => e.Id == 799 && e.ByteArray9000 == longBinary));
+            }
+        }
+
+        public override void Can_insert_and_read_with_max_length_set()
+        {
+            const string shortString = "Sky";
+            var shortBinary = new byte[] { 8, 8, 7, 8, 7 };
+
+            var longString = new string('X', 8000);
+            var longBinary = new byte[8000];
+            for (var i = 0; i < longBinary.Length; i++)
+            {
+                longBinary[i] = (byte)(i);
+            }
+
+            using (var context = CreateContext())
+            {
+                context.Set<MaxLengthDataTypes>().Add(
+                    new MaxLengthDataTypes
+                    {
+                        Id = 79,
+                        String3 = shortString,
+                        ByteArray5 = shortBinary,
+                        String9000 = longString,
+                        ByteArray9000 = longBinary
+                    });
+
+                Assert.Equal(1, context.SaveChanges());
+            }
+
+            using (var context = CreateContext())
+            {
+                var dt = context.Set<MaxLengthDataTypes>().Single(e => e.Id == 79);
+
+                Assert.Equal(shortString, dt.String3);
+                Assert.Equal(shortBinary, dt.ByteArray5);
+                Assert.Equal(longString, dt.String9000);
+                Assert.Equal(longBinary, dt.ByteArray9000);
+            }
+        }
+
+
+        public override void Can_insert_and_read_back_all_non_nullable_data_types()
+        {
+            using (var context = CreateContext())
+            {
+                context.Set<BuiltInDataTypes>().Add(
+                    new BuiltInDataTypes
+                    {
+                        Id = 1,
+                        PartitionId = 1,
+                        TestInt16 = -1234,
+                        TestInt32 = -123456789,
+                        TestInt64 = -1234567890123456789L,
+                        TestDouble = -1.23456789,
+                        TestDecimal = -1234567890.01M,
+                        TestDateTime = DateTime.Parse("01/01/2000 12:34:56"),
+                        TestDateTimeOffset = new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)),
+                        TestTimeSpan = new TimeSpan(0, 10, 9, 8, 7),
+                        TestSingle = -1.234F,
+                        TestBoolean = true,
+                        TestByte = 255,
+                        TestUnsignedInt16 = 1234,
+                        TestUnsignedInt32 = 1234565789U,
+                        TestUnsignedInt64 = 1234567890123456789UL,
+                        TestCharacter = 'a',
+                        TestSignedByte = -128,
+                        Enum64 = Enum64.SomeValue,
+                        Enum32 = Enum32.SomeValue,
+                        Enum16 = Enum16.SomeValue,
+                        Enum8 = Enum8.SomeValue
+                    });
+
+                Assert.Equal(1, context.SaveChanges());
+            }
+
+            using (var context = CreateContext())
+            {
+                var dt = context.Set<BuiltInDataTypes>().Single(e => e.Id == 1);
+
+                var entityType = context.Model.FindEntityType(typeof(BuiltInDataTypes));
+                AssertEqualIfMapped(entityType, (short)-1234, () => dt.TestInt16);
+                AssertEqualIfMapped(entityType, -123456789, () => dt.TestInt32);
+                AssertEqualIfMapped(entityType, -1234567890123456789L, () => dt.TestInt64);
+                AssertEqualIfMapped(entityType, -1.23456789, () => dt.TestDouble);
+                AssertEqualIfMapped(entityType, -1234567890.01M, () => dt.TestDecimal);
+                AssertEqualIfMapped(entityType, DateTime.Parse("01/01/2000 12:34:56"), () => dt.TestDateTime);
+                AssertEqualIfMapped(entityType, new DateTimeOffset(DateTime.Parse("01/01/2000 12:34:56"), TimeSpan.FromHours(-8.0)), () => dt.TestDateTimeOffset);
+                AssertEqualIfMapped(entityType, new TimeSpan(0, 10, 9, 8, 7), () => dt.TestTimeSpan);
+                AssertEqualIfMapped(entityType, -1.234F, () => dt.TestSingle);
+                AssertEqualIfMapped(entityType, true, () => dt.TestBoolean);
+                AssertEqualIfMapped(entityType, (byte)255, () => dt.TestByte);
+                AssertEqualIfMapped(entityType, Enum64.SomeValue, () => dt.Enum64);
+                AssertEqualIfMapped(entityType, Enum32.SomeValue, () => dt.Enum32);
+                AssertEqualIfMapped(entityType, Enum16.SomeValue, () => dt.Enum16);
+                AssertEqualIfMapped(entityType, Enum8.SomeValue, () => dt.Enum8);
+                AssertEqualIfMapped(entityType, (ushort)1234, () => dt.TestUnsignedInt16);
+                AssertEqualIfMapped(entityType, 1234565789U, () => dt.TestUnsignedInt32);
+                AssertEqualIfMapped(entityType, 1234567890123456789UL, () => dt.TestUnsignedInt64);
+                AssertEqualIfMapped(entityType, 'a', () => dt.TestCharacter);
+                AssertEqualIfMapped(entityType, (sbyte)-128, () => dt.TestSignedByte);
+            }
+        }
+
 
         [Fact]
         public virtual void Can_query_using_any_mapped_data_type()
@@ -732,6 +1003,14 @@ stringkeydatatype.Id ---> [varchar] [MaxLength = 450]
             public int? NumericPrecision { get; set; }
             public int? NumericScale { get; set; }
             public int? DateTimePrecision { get; set; }
+        }
+
+        private static void AssertEqualIfMapped<T>(IEntityType entityType, T expected, Expression<Func<T>> actual)
+        {
+            if (entityType.FindProperty(((MemberExpression)actual.Body).Member.Name) != null)
+            {
+                Assert.Equal(expected, actual.Compile()());
+            }
         }
     }
 }

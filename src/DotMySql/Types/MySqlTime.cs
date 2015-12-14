@@ -105,7 +105,7 @@ namespace MySql.Data.Types
       }
       else
       {
-        String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5:000000}'",
+        String s = String.Format("'{0}{1} {2:00}:{3:00}:{4:00}.{5:0000000}'",
             negative ? "-" : "", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Ticks % 10000000);
 			
         packet.WriteStringNoNull(s);

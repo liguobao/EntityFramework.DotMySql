@@ -31,7 +31,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         private readonly RelationalTypeMapping _float = new RelationalTypeMapping("float", typeof(float));
         private readonly RelationalTypeMapping _int = new RelationalTypeMapping("int", typeof(int), DbType.Int32);
         private readonly RelationalTypeMapping _smallint = new RelationalTypeMapping("smallint", typeof(short), DbType.Int16);
-        private readonly RelationalTypeMapping _tinyint = new RelationalTypeMapping("tinyint", typeof(byte), DbType.Byte);
+        private readonly RelationalTypeMapping _tinyint = new RelationalTypeMapping("tinyint unsigned", typeof(byte), DbType.Byte);
         
         
         private readonly RelationalTypeMapping _rowversion = new RelationalTypeMapping("TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", typeof(byte[]), DbType.Binary);
@@ -47,7 +47,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
 
 
         private readonly RelationalTypeMapping _uniqueidentifier = new RelationalTypeMapping("char(38)", typeof(Guid));
-        private readonly RelationalTypeMapping _time = new RelationalTypeMapping("time", typeof(TimeSpan));
+        private readonly RelationalTypeMapping _time = new RelationalTypeMapping("time(6)", typeof(TimeSpan), DbType.Time);
 
 
 
@@ -104,7 +104,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
                     { typeof(byte), _tinyint },
                     { typeof(double), _double },
                     { typeof(char), _int },
-                    { typeof(sbyte), new RelationalTypeMapping("smallint", typeof(sbyte)) },
+                    { typeof(sbyte), new RelationalTypeMapping("tinyint", typeof(sbyte)) },
                     { typeof(ushort), new RelationalTypeMapping("int", typeof(ushort)) },
                     { typeof(uint), new RelationalTypeMapping("bigint", typeof(uint)) },
                     { typeof(ulong), new RelationalTypeMapping("real(20, 0)", typeof(ulong)) },

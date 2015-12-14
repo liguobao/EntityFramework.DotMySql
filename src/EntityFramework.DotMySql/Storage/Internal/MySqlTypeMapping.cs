@@ -20,6 +20,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
             : base(defaultTypeName, clrType)
         {
             StoreType = storeType;
+            
         }
 
         internal MySqlTypeMapping([NotNull] string defaultTypeName, [NotNull] Type clrType)
