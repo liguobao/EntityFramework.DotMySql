@@ -124,7 +124,7 @@ namespace Microsoft.Data.Entity.Update.Internal
             IReadOnlyList<ColumnModification> operations)
             => commandStringBuilder
                 .AppendLine()
-                .Append(";SELECT LAST_INSERT_ID();");
+                .Append("SELECT LAST_INSERT_ID();");
 
         protected override ResultSetMapping AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name,
             string schema, int commandPosition)

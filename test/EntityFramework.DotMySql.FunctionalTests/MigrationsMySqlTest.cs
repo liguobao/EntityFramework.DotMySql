@@ -248,5 +248,10 @@ createdtable
 
             return builder.ToString();
         }
+
+        private static string FileLineEnding = @"
+";
+
+        private static string Sql => TestSqlLoggerFactory.Sql.Replace(Environment.NewLine, FileLineEnding);
     }
 }
