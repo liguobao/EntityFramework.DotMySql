@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class ComplexNavigationsQuerySqlServerFixture 
+    public class ComplexNavigationsQueryMySqlFixture 
         : ComplexNavigationsQueryRelationalFixture<MySqlTestStore>
     {
         public static readonly string DatabaseName = "ComplexNavigations";
@@ -20,7 +20,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         private readonly string _connectionString 
             = MySqlTestStore.CreateConnectionString(DatabaseName);
 
-        public ComplexNavigationsQuerySqlServerFixture()
+        public ComplexNavigationsQueryMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()
