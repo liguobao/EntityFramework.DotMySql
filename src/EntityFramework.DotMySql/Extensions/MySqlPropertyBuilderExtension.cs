@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EntityFramework.DotMySql.Metadata;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata;
@@ -18,13 +19,8 @@ namespace EntityFramework.DotMySql.Extensions
             Check.NotNull(propertyBuilder, nameof(propertyBuilder));
 
             var property = propertyBuilder.Metadata;
-            /*property.MySql();
-            property.SqlServer().ValueGenerationStrategy = SqlServerValueGenerationStrategy.IdentityColumn;
             property.ValueGenerated = ValueGenerated.OnAdd;
-            property.RequiresValueGenerator = true;
-            property.SqlServer().HiLoSequenceName = null;
-            property.SqlServer().HiLoSequenceSchema = null;*/
-
+            property.MySql().ValueGenerationStrategy = MySqlValueGenerationStrategy.AutoIncrement;
             return propertyBuilder;
         }
 

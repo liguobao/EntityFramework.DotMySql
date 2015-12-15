@@ -312,6 +312,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     Assert.Equal(1, context.Jacks.Count());
                     Assert.Equal(1, context.Blacks.Count());
                 }
+
+                await testDatabase.ExecuteNonQueryAsync("DROP SCHEMA Apple");
             }
         }
 

@@ -11,7 +11,7 @@ namespace EntityFramework.DotMySql.Metadata.Conventions.Internal
     {
         public InternalModelBuilder Apply(InternalModelBuilder modelBuilder)
         {
-            //modelBuilder.MySql(ConfigurationSource.Convention)
+            modelBuilder.MySql(ConfigurationSource.Convention).ValueGenerationStrategy(MySqlValueGenerationStrategy.AutoIncrement);
             return modelBuilder;
             
         }

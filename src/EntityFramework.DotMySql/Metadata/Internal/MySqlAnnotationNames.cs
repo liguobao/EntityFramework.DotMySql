@@ -13,5 +13,6 @@ namespace Microsoft.Data.Entity.Metadata.Internal
         public const string SequenceName = "SequenceName";
         public const string SequenceSchema = "SequenceSchema";
         public const string IndexMethod = "IndexMethod";
+        public const string ValueGenerationStrategy = "ValueGenerationStrategy";
     }
 }

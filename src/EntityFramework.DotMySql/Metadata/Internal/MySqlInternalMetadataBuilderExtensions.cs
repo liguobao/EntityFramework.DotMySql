@@ -1,12 +1,19 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using EntityFramework.DotMySql.Metadata.Internal;
 using JetBrains.Annotations;
 
 namespace Microsoft.Data.Entity.Metadata.Internal
 {
     public static class MySqlInternalMetadataBuilderExtensions
     {
+
+        public static MySqlModelBuilderAnnotations MySql(
+            [NotNull] this InternalModelBuilder builder,
+            ConfigurationSource configurationSource)
+            => new MySqlModelBuilderAnnotations(builder, configurationSource);
+
         public static RelationalEntityTypeBuilderAnnotations MySql(
             [NotNull] this InternalEntityTypeBuilder builder,
             ConfigurationSource configurationSource)

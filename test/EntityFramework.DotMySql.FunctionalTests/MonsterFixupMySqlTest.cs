@@ -76,9 +76,12 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             base.OnModelCreating<TMessage, TProductPhoto, TProductReview>(builder);
 
-            builder.Entity<TMessage>().Property(e => e.MessageId).UseMySqlIdentityColumn();
+            /*builder.Entity<TMessage>().Property(e => e.MessageId).UseMySqlIdentityColumn();
             builder.Entity<TProductPhoto>().Property(e => e.PhotoId).UseMySqlIdentityColumn();
-            builder.Entity<TProductReview>().Property(e => e.ReviewId).UseMySqlIdentityColumn();
+            builder.Entity<TProductReview>().Property(e => e.ReviewId).UseMySqlIdentityColumn();*/
+            builder.Entity<TMessage>().HasKey(e => e.MessageId);
+            builder.Entity<TProductReview>().HasKey(e => e.ReviewId);
+            builder.Entity<TProductPhoto>().HasKey(e => e.PhotoId);
         }
     }
 }

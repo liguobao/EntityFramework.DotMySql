@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EntityFramework.DotMySql.Metadata;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Internal;
@@ -13,8 +14,8 @@ namespace Microsoft.Data.Entity.Migrations.Internal
         {
             
             if (property.ValueGenerated == ValueGenerated.OnAdd &&
-                property.ClrType.IsIntegerForSerial()) {
-                yield return new Annotation(MySqlAnnotationNames.Prefix + MySqlAnnotationNames.Serial, true);
+                property.MySql().ValueGenerationStrategy == MySqlValueGenerationStrategy.AutoIncrement) {
+                yield return new Annotation(MySqlAnnotationNames.Prefix + MySqlAnnotationNames.ValueGenerationStrategy, MySqlValueGenerationStrategy.AutoIncrement);
             }
 
             // TODO: Named sequences

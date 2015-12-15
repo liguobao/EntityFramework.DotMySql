@@ -37,11 +37,11 @@ namespace Microsoft.Data.Entity
         public static RelationalKeyAnnotations MySql([NotNull] this Key key)
             => (RelationalKeyAnnotations)MySql((IKey)key);
 
-        public static RelationalModelAnnotations MySql([NotNull] this Model model)
-            => (RelationalModelAnnotations)MySql((IModel)model);
+        public static MySqlModelAnnotations MySql([NotNull] this Model model)
+            => (MySqlModelAnnotations)MySql((IModel)model);
 
-        public static IRelationalModelAnnotations MySql([NotNull] this IModel model)
-            => new RelationalModelAnnotations(Check.NotNull(model, nameof(model)), MySqlAnnotationNames.Prefix);
+        public static IMySqlModelAnnotations MySql([NotNull] this IModel model)
+            => new MySqlModelAnnotations(Check.NotNull(model, nameof(model)));
 
         public static MySqlPropertyAnnotations MySql([NotNull] this IMutableProperty property)
             => (MySqlPropertyAnnotations)MySql((IProperty)property);
@@ -49,7 +49,7 @@ namespace Microsoft.Data.Entity
         public static IMySqlPropertyAnnotations MySql([NotNull] this IProperty property)
             => new MySqlPropertyAnnotations(Check.NotNull(property, nameof(property)), MySqlAnnotationNames.Prefix);
 
-        public static RelationalPropertyAnnotations MySql([NotNull] this Property property)
+        public static MySqlPropertyAnnotations MySql([NotNull] this Property property)
             => (MySqlPropertyAnnotations)MySql((IProperty)property);
 
 

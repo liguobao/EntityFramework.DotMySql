@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using EntityFramework.DotMySql.Metadata;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
@@ -346,8 +347,8 @@ namespace Microsoft.Data.Entity.Migrations
             // TODO: Maybe implement computed columns via functions?
             // http://stackoverflow.com/questions/11165450/store-common-query-as-column/11166268#11166268
 
-            var serial = annotatable[MySqlAnnotationNames.Prefix + MySqlAnnotationNames.Serial];
-            if (serial != null && (bool)serial)
+            var valueGeneration = (MySqlValueGenerationStrategy?)annotatable[MySqlAnnotationNames.Prefix + MySqlAnnotationNames.ValueGenerationStrategy] ;
+            if (valueGeneration != null && valueGeneration == MySqlValueGenerationStrategy.AutoIncrement)
             {
                 switch (type)
                 {
@@ -381,6 +382,24 @@ namespace Microsoft.Data.Entity.Migrations
                 annotatable,
                 model,
                 builder);
+        }
+
+        protected override void DefaultValue(object defaultValue, string defaultValueSql, RelationalCommandListBuilder builder)
+        {
+            Check.NotNull(builder, nameof(builder));
+
+            if (defaultValueSql != null)
+            {
+                builder
+                    .Append(" DEFAULT ")
+                    .Append(defaultValueSql);
+            }
+            else if (defaultValue != null)
+            {
+                builder
+                    .Append(" DEFAULT ")
+                    .Append(SqlGenerationHelper.GenerateLiteral(defaultValue));
+            }
         }
 
         public virtual void Rename(

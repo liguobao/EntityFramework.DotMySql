@@ -177,6 +177,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             using (var context = new BronieContext(serviceProvider, "CompositeEarthPonies"))
             {
                 Assert.Equal(0, context.EarthPonies.Count());
+                context.Database.EnsureDeleted();
             }
         }
 

@@ -43,6 +43,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 {
                     Assert.Equal("Rainbow Dash " + i, pegasuses[i].Name);
                 }
+
+                context.Database.EnsureDeleted();
             }
         }
 
@@ -79,6 +81,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     Assert.Equal("Rainbow Dash " + i, pegasuses[i].Name);
                     Assert.Equal(guids[i], pegasuses[i].Id);
                 }
+
+                context.Database.EnsureDeleted();
             }
         }
 

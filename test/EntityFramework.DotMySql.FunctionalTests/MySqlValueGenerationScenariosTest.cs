@@ -32,6 +32,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(1, blogs[0].Id);
                     Assert.Equal(2, blogs[1].Id);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -88,6 +90,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(77, blogs[0].Id);
                     Assert.Equal(78, blogs[1].Id);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -126,6 +130,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(77, blogs[0].Id);
                     Assert.Equal(78, blogs[1].Id);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -165,6 +171,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(66, blogs[0].Id);
                     Assert.Equal(67, blogs[1].Id);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -200,6 +208,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(0, blogs[0].Id);
                     Assert.Equal(1, blogs[1].Id);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -255,6 +265,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(new DateTime(1969, 8, 3, 0, 10, 0), blogs[1].CreatedOn);
                     Assert.Equal(new DateTime(1973, 9, 3, 0, 10, 0), blogs[0].CreatedOn);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -265,7 +277,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     modelBuilder.Entity<Blog>()
                         .Property(e => e.CreatedOn)
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 }
             }
         }
@@ -309,6 +321,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
                     Assert.Equal(dateTime0, blogs[0].CreatedOn);
                     Assert.Equal(new DateTime(1973, 9, 3, 0, 10, 0), blogs[1].CreatedOn);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
@@ -511,39 +525,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             }
         }
 
-        public class ReadOnlyIdentityColumnWithDefaultValueThrows : TestBase<ReadOnlyIdentityColumnWithDefaultValueThrows.BlogContext>
-        {
-            [ConditionalFact]
-            [MySqlCondition(SqlServerCondition.SupportsSequences)]
-            public void Insert_explicit_value_throws_when_readonly_before_save()
-            {
-                using (var context = new BlogContext())
-                {
-                    context.AddRange(new Blog { Id = 1, Name = "One Unicorn" }, new Blog { Name = "Two Unicorns" });
-
-                    // The property 'Id' on entity type 'Blog' is defined to be read-only before it is 
-                    // saved, but its value has been set to something other than a temporary or default value.
-                    Assert.Equal(
-                        CoreStrings.PropertyReadOnlyBeforeSave("Id", "Blog"),
-                        Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).Message);
-                }
-            }
-
-            public class BlogContext : ContextBase
-            {
-                protected override void OnModelCreating(ModelBuilder modelBuilder)
-                {
-                    modelBuilder.HasSequence("MySequence");
-
-                    modelBuilder
-                        .Entity<Blog>()
-                        .Property(e => e.Id)
-                        .HasDefaultValueSql("next value for MySequence")
-                        .Metadata.IsReadOnlyBeforeSave = true;
-                }
-            }
-        }
-
         public class NonKeyReadOnlyDefaultValueThrows : TestBase<NonKeyReadOnlyDefaultValueThrows.BlogContext>
         {
             [Fact]
@@ -569,7 +550,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 {
                     modelBuilder.Entity<Blog>()
                         .Property(e => e.CreatedOn)
-                        .HasDefaultValueSql("getdate()")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP")
                         .Metadata.IsReadOnlyBeforeSave = true;
                 }
             }
@@ -626,6 +607,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     Assert.Equal(
                         CoreStrings.PropertyReadOnlyAfterSave("FullName", "FullNameBlog"),
                         Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).Message);
+
+                    context.Database.EnsureDeleted();
                 }
             }
 
