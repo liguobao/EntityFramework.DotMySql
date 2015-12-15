@@ -18,6 +18,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             base.Compare_bool_with_bool_equal();
 
+
             Assert.Equal(
                 @"SELECT `e`.`Id`
 FROM `NullSemanticsEntity1` AS `e`
