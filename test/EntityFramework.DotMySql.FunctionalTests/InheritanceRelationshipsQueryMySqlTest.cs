@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using Microsoft.Data.Entity.FunctionalTests;
 using Xunit;
 
@@ -928,6 +929,9 @@ WHERE `e`.`Discriminator` IN ('NestedCollectionDerived', 'NestedCollectionBase')
         {
         }
 
-        private static string Sql => TestSqlLoggerFactory.Sql;
+        private static string FileLineEnding = @"
+";
+
+        private static string Sql => TestSqlLoggerFactory.Sql.Replace(Environment.NewLine, FileLineEnding);
     }
 }
