@@ -522,6 +522,9 @@ WHERE (`c`.`ContactName` = `c`.`CompanyName`) OR (`c`.`ContactName` IS NULL AND 
         {
         }
 
-        private static string Sql => TestSqlLoggerFactory.Sql;
+        private static string FileLineEnding = @"
+";
+
+        private static string Sql => TestSqlLoggerFactory.Sql.Replace(Environment.NewLine, FileLineEnding);
     }
 }

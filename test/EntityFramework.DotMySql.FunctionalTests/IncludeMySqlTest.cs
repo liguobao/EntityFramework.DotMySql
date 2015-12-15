@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.Data.Entity.FunctionalTests;
+using System;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -900,6 +901,9 @@ ORDER BY `c`.`CustomerID`",
                 Sql);
         }
 
-        private static string Sql => TestSqlLoggerFactory.Sql;
+        private static string FileLineEnding = @"
+";
+
+        private static string Sql => TestSqlLoggerFactory.Sql.Replace(Environment.NewLine, FileLineEnding);
     }
 }
