@@ -6,15 +6,15 @@ using Xunit;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class MappingQuerySqlServerTest : MappingQueryTestBase, IClassFixture<MappingQuerySqlServerFixture>
+    public class MappingQueryMySqlTest : MappingQueryTestBase, IClassFixture<MappingQueryMySqlFixture>
     {
         public override void All_customers()
         {
             base.All_customers();
 
             Assert.Equal(
-                @"SELECT [c].[CustomerID], [c].[CompanyName]
-FROM [dbo].[Customers] AS [c]",
+                @"SELECT `c`.`CustomerID`, `c`.`CompanyName`
+FROM `Customers` AS `c`",
                 Sql);
         }
 
@@ -23,8 +23,8 @@ FROM [dbo].[Customers] AS [c]",
             base.All_employees();
 
             Assert.Equal(
-                @"SELECT [e].[EmployeeID], [e].[City]
-FROM [dbo].[Employees] AS [e]",
+                @"SELECT `e`.`EmployeeID`, `e`.`City`
+FROM `Employees` AS `e`",
                 Sql);
         }
 
@@ -33,8 +33,8 @@ FROM [dbo].[Employees] AS [e]",
             base.All_orders();
 
             Assert.Equal(
-                @"SELECT [o].[OrderID], [o].[ShipVia]
-FROM [dbo].[Orders] AS [o]",
+                @"SELECT `o`.`OrderID`, `o`.`ShipVia`
+FROM `Orders` AS `o`",
                 Sql);
         }
 
@@ -43,14 +43,14 @@ FROM [dbo].[Orders] AS [o]",
             base.Project_nullable_enum();
 
             Assert.Equal(
-                @"SELECT [o].[ShipVia]
-FROM [dbo].[Orders] AS [o]",
+                @"SELECT `o`.`ShipVia`
+FROM `Orders` AS `o`",
                 Sql);
         }
 
-        private readonly MappingQuerySqlServerFixture _fixture;
+        private readonly MappingQueryMySqlFixture _fixture;
 
-        public MappingQuerySqlServerTest(MappingQuerySqlServerFixture fixture)
+        public MappingQueryMySqlTest(MappingQueryMySqlFixture fixture)
         {
             _fixture = fixture;
         }

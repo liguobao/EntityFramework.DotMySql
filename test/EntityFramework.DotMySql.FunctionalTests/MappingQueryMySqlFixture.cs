@@ -10,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class MappingQuerySqlServerFixture : MappingQueryFixtureBase
+    public class MappingQueryMySqlFixture : MappingQueryFixtureBase
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly DbContextOptions _options;
         private readonly MySqlTestStore _testDatabase;
 
-        public MappingQuerySqlServerFixture()
+        public MappingQueryMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()

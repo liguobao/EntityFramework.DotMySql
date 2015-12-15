@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity.FunctionalTests;
@@ -9,9 +10,9 @@ using Xunit;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class MigrationsSqlServerTest : MigrationsTestBase<MigrationsSqlServerFixture>
+    public class MigrationsMySqlTest : MigrationsTestBase<MigrationsMySqlFixture>
     {
-        public MigrationsSqlServerTest(MigrationsSqlServerFixture fixture)
+        public MigrationsMySqlTest(MigrationsMySqlFixture fixture)
             : base(fixture)
         {
         }
@@ -21,35 +22,24 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             base.Can_generate_up_scripts();
 
             Assert.Equal(
-                @"IF OBJECT_ID(N'__EFMigrationsHistory') IS NULL
-    CREATE TABLE [__EFMigrationsHistory] (
-        [MigrationId] nvarchar(150) NOT NULL,
-        [ProductVersion] nvarchar(32) NOT NULL,
-        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-    );
-
-GO
-
-CREATE TABLE [Table1] (
-    [Id] int NOT NULL,
-    CONSTRAINT [PK_Table1] PRIMARY KEY ([Id])
+                @"CREATE TABLE `__EFMigrationsHistory` (
+    `MigrationId` varchar(150) NOT NULL,
+    `ProductVersion` varchar(32) NOT NULL,
+    CONSTRAINT `PK___EFMigrationsHistory` PRIMARY KEY (`MigrationId`)
 );
 
-GO
+CREATE TABLE `Table1` (
+    `Id` int NOT NULL,
+    CONSTRAINT `PK_Table1` PRIMARY KEY (`Id`)
+);
 
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'00000000000001_Migration1', N'7.0.0-test');
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('00000000000001_Migration1', '7.0.0-test');
 
-GO
+ALTER TABLE `Table1` RENAME TO `Table2`;
 
-EXEC sp_rename N'Table1', N'Table2';
-
-GO
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'00000000000002_Migration2', N'7.0.0-test');
-
-GO
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('00000000000002_Migration2', '7.0.0-test');
 
 ",
                 Sql);
@@ -111,23 +101,15 @@ GO
             base.Can_generate_down_scripts();
 
             Assert.Equal(
-                @"EXEC sp_rename N'Table2', N'Table1';
+                @"ALTER TABLE `Table2` RENAME TO `Table1`;
 
-GO
+DELETE FROM `__EFMigrationsHistory`
+WHERE `MigrationId` = '00000000000002_Migration2';
 
-DELETE FROM [__EFMigrationsHistory]
-WHERE [MigrationId] = N'00000000000002_Migration2';
+DROP TABLE `Table1`;
 
-GO
-
-DROP TABLE [Table1];
-
-GO
-
-DELETE FROM [__EFMigrationsHistory]
-WHERE [MigrationId] = N'00000000000001_Migration1';
-
-GO
+DELETE FROM `__EFMigrationsHistory`
+WHERE `MigrationId` = '00000000000001_Migration1';
 
 ",
                 Sql);
@@ -176,7 +158,7 @@ GO
         {
             base.Can_get_active_provider();
 
-            Assert.Equal("EntityFramework.MicrosoftSqlServer", ActiveProvider);
+            Assert.Equal("EntityFramework.DotMySql", ActiveProvider);
         }
 
         protected override async Task AssertFirstMigrationAsync(DbConnection connection)
@@ -184,10 +166,10 @@ GO
             var sql = await GetDatabaseSchemaAsync(connection);
             Assert.Equal(
                 @"
-CreatedTable
-    Id int NOT NULL
-    ColumnWithDefaultToDrop int NULL DEFAULT ((0))
-    ColumnWithDefaultToAlter int NULL DEFAULT ((1))
+createdtable
+    Id int(11) NOT NULL
+    ColumnWithDefaultToDrop int(11) NULL DEFAULT 0
+    ColumnWithDefaultToAlter int(11) NULL DEFAULT 1
 ",
                 sql);
         }
@@ -197,9 +179,9 @@ CreatedTable
             var sql = await GetDatabaseSchemaAsync(connection);
             Assert.Equal(
                 @"
-CreatedTable
-    Id int NOT NULL
-    ColumnWithDefaultToAlter int NULL
+createdtable
+    Id int(11) NOT NULL
+    ColumnWithDefaultToAlter int(11) NULL
 ",
                 sql);
         }
@@ -209,18 +191,16 @@ CreatedTable
             var builder = new IndentedStringBuilder();
 
             var command = connection.CreateCommand();
-            command.CommandText = @"
+            command.CommandText = String.Format(@"
                 SELECT
-                    t.name,
-                    c.Name,
-                    TYPE_NAME(c.user_type_id),
+                    c.TABLE_NAME,
+                    c.COLUMN_NAME,
+                    c.COLUMN_TYPE,
                     c.is_nullable,
-                    d.Definition
-                FROM sys.objects t
-                LEFT JOIN sys.columns c ON c.object_id = t.object_id
-                LEFT JOIN sys.default_constraints d ON d.parent_column_id = c.column_id
-                WHERE t.type = 'U'
-                ORDER BY t.name, c.column_id;";
+                    c.column_default
+                FROM INFORMATION_SCHEMA.COLUMNS c
+                WHERE c.TABLE_SCHEMA = '{0}'
+                ORDER BY c.TABLE_NAME, c.column_type;", connection.Database);
 
             using (var reader = await command.ExecuteReaderAsync())
             {
@@ -253,7 +233,7 @@ CreatedTable
                         .Append(" ")
                         .Append(reader[2]) // Type
                         .Append(" ")
-                        .Append(reader.GetBoolean(3) ? "NULL" : "NOT NULL");
+                        .Append(reader.GetString(3) == "NO" ? "NOT NULL" : "NULL");
 
                     if (!await reader.IsDBNullAsync(4))
                     {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class InheritanceRelationshipsQuerySqlServerFixture : InheritanceRelationshipsQueryRelationalFixture<MySqlTestStore>
+    public class InheritanceRelationshipsQueryMySqlFixture : InheritanceRelationshipsQueryRelationalFixture<MySqlTestStore>
     {
         public static readonly string DatabaseName = "InheritanceRelationships";
 
@@ -18,7 +18,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
         private readonly string _connectionString = MySqlTestStore.CreateConnectionString(DatabaseName);
 
-        public InheritanceRelationshipsQuerySqlServerFixture()
+        public InheritanceRelationshipsQueryMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()

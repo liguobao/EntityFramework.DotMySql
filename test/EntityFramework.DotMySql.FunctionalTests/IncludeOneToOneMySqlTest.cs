@@ -7,16 +7,16 @@ using Xunit;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class IncludeOneToOneSqlServerTest : IncludeOneToOneTestBase, IClassFixture<OneToOneQuerySqlServerFixture>
+    public class IncludeOneToOneMySqlTest : IncludeOneToOneTestBase, IClassFixture<OneToOneQueryMySqlFixture>
     {
         public override void Include_person()
         {
             base.Include_person();
 
             Assert.Equal(
-                @"SELECT [a].[Id], [a].[City], [a].[Street], [p].[Id], [p].[Name]
-FROM [Address] AS [a]
-INNER JOIN [Person] AS [p] ON [a].[Id] = [p].[Id]",
+                @"SELECT `a`.`Id`, `a`.`City`, `a`.`Street`, `p`.`Id`, `p`.`Name`
+FROM `Address` AS `a`
+INNER JOIN `Person` AS `p` ON `a`.`Id` = `p`.`Id`",
                 Sql);
         }
 
@@ -25,9 +25,9 @@ INNER JOIN [Person] AS [p] ON [a].[Id] = [p].[Id]",
             base.Include_person_shadow();
 
             Assert.Equal(
-                @"SELECT [a].[Id], [a].[City], [a].[PersonId], [a].[Street], [p].[Id], [p].[Name]
-FROM [Address2] AS [a]
-INNER JOIN [Person2] AS [p] ON [a].[PersonId] = [p].[Id]",
+                @"SELECT `a`.`Id`, `a`.`City`, `a`.`PersonId`, `a`.`Street`, `p`.`Id`, `p`.`Name`
+FROM `Address2` AS `a`
+INNER JOIN `Person2` AS `p` ON `a`.`PersonId` = `p`.`Id`",
                 Sql);
         }
 
@@ -36,9 +36,9 @@ INNER JOIN [Person2] AS [p] ON [a].[PersonId] = [p].[Id]",
             base.Include_address();
 
             Assert.Equal(
-                @"SELECT [p].[Id], [p].[Name], [a].[Id], [a].[City], [a].[Street]
-FROM [Person] AS [p]
-LEFT JOIN [Address] AS [a] ON [a].[Id] = [p].[Id]",
+                @"SELECT `p`.`Id`, `p`.`Name`, `a`.`Id`, `a`.`City`, `a`.`Street`
+FROM `Person` AS `p`
+LEFT JOIN `Address` AS `a` ON `a`.`Id` = `p`.`Id`",
                 Sql);
         }
 
@@ -47,15 +47,15 @@ LEFT JOIN [Address] AS [a] ON [a].[Id] = [p].[Id]",
             base.Include_address_shadow();
 
             Assert.Equal(
-                @"SELECT [p].[Id], [p].[Name], [a].[Id], [a].[City], [a].[PersonId], [a].[Street]
-FROM [Person2] AS [p]
-LEFT JOIN [Address2] AS [a] ON [a].[PersonId] = [p].[Id]",
+                @"SELECT `p`.`Id`, `p`.`Name`, `a`.`Id`, `a`.`City`, `a`.`PersonId`, `a`.`Street`
+FROM `Person2` AS `p`
+LEFT JOIN `Address2` AS `a` ON `a`.`PersonId` = `p`.`Id`",
                 Sql);
         }
 
-        private readonly OneToOneQuerySqlServerFixture _fixture;
+        private readonly OneToOneQueryMySqlFixture _fixture;
 
-        public IncludeOneToOneSqlServerTest(OneToOneQuerySqlServerFixture fixture)
+        public IncludeOneToOneMySqlTest(OneToOneQueryMySqlFixture fixture)
         {
             _fixture = fixture;
         }

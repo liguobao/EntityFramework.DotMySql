@@ -3,19 +3,20 @@
 
 using System;
 using Microsoft.Data.Entity.FunctionalTests;
+using Microsoft.Data.Entity.FunctionalTests.TestModels.Inheritance;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class OneToOneQuerySqlServerFixture : OneToOneQueryFixtureBase, IDisposable
+    public class InheritanceMySqlFixture : InheritanceRelationalFixture, IDisposable
     {
         private readonly DbContextOptions _options;
         private readonly IServiceProvider _serviceProvider;
         private readonly MySqlTestStore _testStore;
 
-        public OneToOneQuerySqlServerFixture()
+        public InheritanceMySqlFixture()
         {
             _serviceProvider
                 = new ServiceCollection()
@@ -29,18 +30,20 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             _testStore = MySqlTestStore.CreateScratch();
 
             var optionsBuilder = new DbContextOptionsBuilder();
-            optionsBuilder.UseMySql(_testStore.Connection.ConnectionString);
-            _options = optionsBuilder.Options;
 
-            using (var context = new DbContext(_serviceProvider, _options))
+            optionsBuilder
+                .EnableSensitiveDataLogging()
+                .UseMySql(_testStore.Connection);
+
+            _options = optionsBuilder.Options;
+            using (var context = CreateContext())
             {
                 context.Database.EnsureCreated();
-
-                AddTestData(context);
+                SeedData(context);
             }
         }
 
-        public DbContext CreateContext() => new DbContext(_serviceProvider, _options);
+        public override InheritanceContext CreateContext() => new InheritanceContext(_serviceProvider, _options);
         public void Dispose() => _testStore.Dispose();
     }
 }

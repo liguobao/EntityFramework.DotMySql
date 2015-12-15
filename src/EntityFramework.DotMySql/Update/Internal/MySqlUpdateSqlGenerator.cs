@@ -65,7 +65,7 @@ namespace Microsoft.Data.Entity.Update.Internal
                     commandStringBuilder.Append(",").AppendLine();
                     AppendValues(commandStringBuilder, modificationCommands[j].ColumnModifications.Where(o => o.IsWrite).ToArray());
                 }
-                commandStringBuilder.Append(SqlGenerationHelper.BatchTerminator).AppendLine();
+                commandStringBuilder.Append(SqlGenerationHelper.StatementTerminator).AppendLine();
 
                 if (readOperations.Length == 0)
                 {
@@ -107,7 +107,7 @@ namespace Microsoft.Data.Entity.Update.Internal
                 AppendOutputClause(commandStringBuilder, readOperations);
             }*/
             AppendWhereClause(commandStringBuilder, conditionOperations);
-            commandStringBuilder.Append(SqlGenerationHelper.BatchTerminator).AppendLine();
+            commandStringBuilder.Append(SqlGenerationHelper.StatementTerminator).AppendLine();
 
             if (readOperations.Length == 0)
             {
@@ -124,14 +124,14 @@ namespace Microsoft.Data.Entity.Update.Internal
             IReadOnlyList<ColumnModification> operations)
             => commandStringBuilder
                 .AppendLine()
-                .Append("; SELECT LAST_INSERT_ID();");
+                .Append(";SELECT LAST_INSERT_ID();");
 
         protected override ResultSetMapping AppendSelectAffectedCountCommand(StringBuilder commandStringBuilder, string name,
             string schema, int commandPosition)
         {
         
             Check.NotNull(commandStringBuilder, nameof(commandStringBuilder))
-                .Append("; SELECT ROW_COUNT()")
+                .Append("SELECT ROW_COUNT()")
                 .Append(SqlGenerationHelper.BatchTerminator).AppendLine();
 
             return ResultSetMapping.LastInResultSet;

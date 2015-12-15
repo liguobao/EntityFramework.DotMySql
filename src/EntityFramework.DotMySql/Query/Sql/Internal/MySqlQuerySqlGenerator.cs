@@ -2,12 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Query.Expressions;
 using Microsoft.Data.Entity.Query.Expressions.Internal;
 using Microsoft.Data.Entity.Storage;
+using Microsoft.Data.Entity.Storage.Internal;
 using Microsoft.Data.Entity.Utilities;
 
 // ReSharper disable once CheckNamespace
@@ -35,6 +37,18 @@ namespace Microsoft.Data.Entity.Query.Sql.Internal
         {
             // No TOP() in PostgreSQL, see GenerateLimitOffset
         }
+
+        public override Expression VisitTable(TableExpression tableExpression)
+        {
+            Check.NotNull(tableExpression, nameof(tableExpression));
+
+            Sql.Append(SqlGenerator.DelimitIdentifier(tableExpression.Table))
+                .Append(" AS ")
+                .Append(SqlGenerator.DelimitIdentifier(tableExpression.Alias));
+
+            return tableExpression;
+        }
+
 
         protected override void GenerateLimitOffset([NotNull] SelectExpression selectExpression)
         {

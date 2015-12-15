@@ -14,6 +14,9 @@ namespace Microsoft.Data.Entity.Migrations.Internal
 {
     public class MySqlHistoryRepository : HistoryRepository
     {
+
+        private MySqlRelationalConnection _connection;
+
         public MySqlHistoryRepository(
             [NotNull] IDatabaseCreator databaseCreator,
             [NotNull] IRawSqlCommandBuilder sqlCommandBuilder,
@@ -33,6 +36,7 @@ namespace Microsoft.Data.Entity.Migrations.Internal
                   annotations,
                   SqlGenerationHelper)
         {
+            _connection = connection;
         }
 
         protected override string ExistsSql
@@ -41,18 +45,12 @@ namespace Microsoft.Data.Entity.Migrations.Internal
             {
                 var builder = new StringBuilder();
 
-                builder.Append("SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace WHERE ");
-
-                if (TableSchema != null)
-                {
-                    builder
-                        .Append("n.nspname='")
-                        .Append(SqlGenerationHelper.EscapeLiteral(TableSchema))
-                        .Append("' AND ");
-                }
-
+                builder.Append("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE ");
+                
                 builder
-                    .Append("c.relname='")
+                    .Append("TABLE_SCHEMA='")
+                    .Append(SqlGenerationHelper.EscapeLiteral(_connection.DbConnection.Database))
+                    .Append("' AND TABLE_NAME='")
                     .Append(SqlGenerationHelper.EscapeLiteral(TableName))
                     .Append("';");
 

@@ -47,6 +47,13 @@ namespace Microsoft.Data.Entity.Migrations
             }
         }
 
+        protected override void Generate(DropColumnOperation operation, IModel model, RelationalCommandListBuilder builder)
+        {
+            var identifier = SqlGenerationHelper.DelimitIdentifier(operation.Table, operation.Schema);
+            var alterBase = $"ALTER TABLE {identifier} DROP COLUMN {SqlGenerationHelper.DelimitIdentifier(operation.Name)}";
+            builder.Append(alterBase).Append(SqlGenerationHelper.StatementTerminator);
+        }
+
         protected override void Generate(AlterColumnOperation operation, IModel model, RelationalCommandListBuilder builder)
         {
             Check.NotNull(operation, nameof(operation));
@@ -69,18 +76,16 @@ namespace Microsoft.Data.Entity.Migrations
             var isSerial = serial != null && (bool)serial.Value;
 
             var identifier = SqlGenerationHelper.DelimitIdentifier(operation.Table, operation.Schema);
-            var alterBase = $"ALTER TABLE {identifier} ALTER COLUMN {SqlGenerationHelper.DelimitIdentifier(operation.Name)}";
+            var alterBase = $"ALTER TABLE {identifier} MODIFY COLUMN {SqlGenerationHelper.DelimitIdentifier(operation.Name)}";
 
             // TYPE
             builder.Append(alterBase)
-                .Append(" TYPE ")
+                .Append(" ")
                 .Append(type)
-                .AppendLine(SqlGenerationHelper.BatchTerminator);
+                .Append(operation.IsNullable ? " NULL" : " NOT NULL")
+                .AppendLine(SqlGenerationHelper.StatementTerminator);
 
-            // NOT NULL
-            builder.Append(alterBase)
-                .Append(operation.IsNullable ? " DROP NOT NULL" : " SET NOT NULL")
-                .AppendLine(SqlGenerationHelper.BatchTerminator);
+            alterBase = $"ALTER TABLE {identifier} ALTER COLUMN {SqlGenerationHelper.DelimitIdentifier(operation.Name)}";
 
             builder.Append(alterBase);
 

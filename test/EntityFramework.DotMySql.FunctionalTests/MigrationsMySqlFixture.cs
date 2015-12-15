@@ -9,12 +9,12 @@ using MySql.Data.MySqlClient;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class MigrationsSqlServerFixture : MigrationsFixtureBase
+    public class MigrationsMySqlFixture : MigrationsFixtureBase
     {
         private readonly DbContextOptions _options;
         private readonly IServiceProvider _serviceProvider;
 
-        public MigrationsSqlServerFixture()
+        public MigrationsMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()
@@ -24,7 +24,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
             var connectionStringBuilder = new MySqlConnectionStringBuilder
             {
-                Database = nameof(MigrationsSqlServerTest)
+                Database = nameof(MigrationsMySqlTest)
             };
             connectionStringBuilder.ApplyConfiguration();
 
