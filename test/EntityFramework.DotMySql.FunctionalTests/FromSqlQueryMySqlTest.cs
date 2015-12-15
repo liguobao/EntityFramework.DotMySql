@@ -23,6 +23,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 Assert.Equal(14, context.ChangeTracker.Entries().Count());
             }
 
+
             Assert.Equal(
                 @"SELECT * FROM `Customers` WHERE `ContactName` LIKE '%z%'",
                 Sql);
