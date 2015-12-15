@@ -6,9 +6,9 @@ using Xunit.Abstractions;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class IncludeAsyncSqlServerTest : IncludeAsyncTestBase<NorthwindQueryMySqlFixture>
+    public class IncludeAsyncMySqlTest : IncludeAsyncTestBase<NorthwindQueryMySqlFixture>
     {
-        public IncludeAsyncSqlServerTest(NorthwindQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
+        public IncludeAsyncMySqlTest(NorthwindQueryMySqlFixture fixture, ITestOutputHelper testOutputHelper)
             : base(fixture)
         {
             //TestSqlLoggerFactory.CaptureOutput(testOutputHelper);

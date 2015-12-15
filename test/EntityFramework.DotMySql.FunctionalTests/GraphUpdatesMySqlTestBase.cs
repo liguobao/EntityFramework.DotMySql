@@ -7,19 +7,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public abstract class GraphUpdatesSqlServerTestBase<TFixture> : GraphUpdatesTestBase<MySqlTestStore, TFixture>
-        where TFixture : GraphUpdatesSqlServerTestBase<TFixture>.GraphUpdatesSqlServerFixtureBase, new()
+    public abstract class GraphUpdatesMySqlTestBase<TFixture> : GraphUpdatesTestBase<MySqlTestStore, TFixture>
+        where TFixture : GraphUpdatesMySqlTestBase<TFixture>.GraphUpdatesMySqlFixtureBase, new()
     {
-        protected GraphUpdatesSqlServerTestBase(TFixture fixture)
+        protected GraphUpdatesMySqlTestBase(TFixture fixture)
             : base(fixture)
         {
         }
 
-        public abstract class GraphUpdatesSqlServerFixtureBase : GraphUpdatesFixtureBase
+        public abstract class GraphUpdatesMySqlFixtureBase : GraphUpdatesFixtureBase
         {
             private readonly IServiceProvider _serviceProvider;
 
-            protected GraphUpdatesSqlServerFixtureBase()
+            protected GraphUpdatesMySqlFixtureBase()
             {
                 _serviceProvider = new ServiceCollection()
                     .AddEntityFramework()

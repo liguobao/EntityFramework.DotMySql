@@ -5,14 +5,14 @@ using EntityFramework.DotMySql.Extensions;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class GraphUpdatesWithIdentitySqlServerTest : GraphUpdatesSqlServerTestBase<GraphUpdatesWithIdentitySqlServerTest.GraphUpdatesWithIdentitySqlServerFixture>
+    public class GraphUpdatesMyWithIdentityMySqlTest : GraphUpdatesMySqlTestBase<GraphUpdatesMyWithIdentityMySqlTest.GraphUpdatesMyWithIdentitySqlFixture>
     {
-        public GraphUpdatesWithIdentitySqlServerTest(GraphUpdatesWithIdentitySqlServerFixture fixture)
+        public GraphUpdatesMyWithIdentityMySqlTest(GraphUpdatesMyWithIdentitySqlFixture fixture)
             : base(fixture)
         {
         }
 
-        public class GraphUpdatesWithIdentitySqlServerFixture : GraphUpdatesSqlServerFixtureBase
+        public class GraphUpdatesMyWithIdentitySqlFixture : GraphUpdatesMySqlFixtureBase
         {
             protected override string DatabaseName => "GraphIdentityUpdatesTest";
 

@@ -14,7 +14,7 @@ using MySql.Data.MySqlClient;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class MonsterFixupSqlServerTest : MonsterFixupTestBase
+    public class MonsterFixupMySqlTest : MonsterFixupTestBase
     {
         private static readonly HashSet<string> _createdDatabases = new HashSet<string>();
 

@@ -6,9 +6,9 @@ using Xunit;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class DataAnnotationSqlServerTest : DataAnnotationTestBase<MySqlTestStore, DataAnnotationSqlServerFixture>
+    public class DataAnnotationMySqlTest : DataAnnotationTestBase<MySqlTestStore, DataAnnotationMySqlFixture>
     {
-        public DataAnnotationSqlServerTest(DataAnnotationSqlServerFixture fixture)
+        public DataAnnotationMySqlTest(DataAnnotationMySqlFixture fixture)
             : base(fixture)
         {
         }
@@ -17,13 +17,15 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             base.ConcurrencyCheckAttribute_throws_if_value_in_database_changed();
 
-            Assert.Equal(@"SELECT TOP(1) [r].[UniqueNo], [r].[MaxLengthProperty], [r].[Name], [r].[RowVersion]
-FROM [Sample] AS [r]
-WHERE [r].[UniqueNo] = 1
+            Assert.Equal(@"SELECT `r`.`UniqueNo`, `r`.`MaxLengthProperty`, `r`.`Name`, `r`.`RowVersion`
+FROM `Sample` AS `r`
+WHERE `r`.`UniqueNo` = 1
+LIMIT 1
 
-SELECT TOP(1) [r].[UniqueNo], [r].[MaxLengthProperty], [r].[Name], [r].[RowVersion]
-FROM [Sample] AS [r]
-WHERE [r].[UniqueNo] = 1
+SELECT `r`.`UniqueNo`, `r`.`MaxLengthProperty`, `r`.`Name`, `r`.`RowVersion`
+FROM `Sample` AS `r`
+WHERE `r`.`UniqueNo` = 1
+LIMIT 1
 
 @p0: 1
 @p1: ModifiedData
@@ -31,8 +33,8 @@ WHERE [r].[UniqueNo] = 1
 @p3: 00000001-0000-0000-0000-000000000001
 
 SET NOCOUNT OFF;
-UPDATE [Sample] SET [Name] = @p1, [RowVersion] = @p2
-WHERE [UniqueNo] = @p0 AND [RowVersion] = @p3;
+UPDATE `Sample` SET `Name` = @p1, `RowVersion` = @p2
+WHERE `UniqueNo` = @p0 AND `RowVersion` = @p3;
 SELECT @@ROWCOUNT;
 
 @p0: 1
@@ -41,8 +43,8 @@ SELECT @@ROWCOUNT;
 @p3: 00000001-0000-0000-0000-000000000001
 
 SET NOCOUNT OFF;
-UPDATE [Sample] SET [Name] = @p1, [RowVersion] = @p2
-WHERE [UniqueNo] = @p0 AND [RowVersion] = @p3;
+UPDATE `Sample` SET `Name` = @p1, `RowVersion` = @p2
+WHERE `UniqueNo` = @p0 AND `RowVersion` = @p3;
 SELECT @@ROWCOUNT;",
                 Sql);
         }
@@ -56,11 +58,11 @@ SELECT @@ROWCOUNT;",
 @p2: 00000000-0000-0000-0000-000000000003
 
 SET NOCOUNT OFF;
-INSERT INTO [Sample] ([MaxLengthProperty], [Name], [RowVersion])
+INSERT INTO `Sample` (`MaxLengthProperty`, `Name`, `RowVersion`)
 VALUES (@p0, @p1, @p2);
-SELECT [UniqueNo]
-FROM [Sample]
-WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
+SELECT `UniqueNo`
+FROM `Sample`
+WHERE @@ROWCOUNT = 1 AND `UniqueNo` = scope_identity();",
                 Sql);
         }
 
@@ -73,22 +75,22 @@ WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
 @p2: 00000000-0000-0000-0000-000000000001
 
 SET NOCOUNT OFF;
-INSERT INTO [Sample] ([MaxLengthProperty], [Name], [RowVersion])
+INSERT INTO `Sample` (`MaxLengthProperty`, `Name`, `RowVersion`)
 VALUES (@p0, @p1, @p2);
-SELECT [UniqueNo]
-FROM [Sample]
-WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();
+SELECT `UniqueNo`
+FROM `Sample`
+WHERE @@ROWCOUNT = 1 AND `UniqueNo` = scope_identity();
 
 @p0: VeryVeryVeryVeryVeryVeryLongString
 @p1: ValidString
 @p2: 00000000-0000-0000-0000-000000000002
 
 SET NOCOUNT OFF;
-INSERT INTO [Sample] ([MaxLengthProperty], [Name], [RowVersion])
+INSERT INTO `Sample` (`MaxLengthProperty`, `Name`, `RowVersion`)
 VALUES (@p0, @p1, @p2);
-SELECT [UniqueNo]
-FROM [Sample]
-WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
+SELECT `UniqueNo`
+FROM `Sample`
+WHERE @@ROWCOUNT = 1 AND `UniqueNo` = scope_identity();",
                 Sql);
         }
 
@@ -100,7 +102,7 @@ WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
 @p1: Book1
 
 SET NOCOUNT OFF;
-INSERT INTO [BookDetail] ([Id], [BookId])
+INSERT INTO `BookDetail` (`Id`, `BookId`)
 VALUES (@p0, @p1);
 SELECT @@ROWCOUNT;
 
@@ -108,7 +110,7 @@ SELECT @@ROWCOUNT;
 @p1: 
 
 SET NOCOUNT OFF;
-INSERT INTO [BookDetail] ([Id], [BookId])
+INSERT INTO `BookDetail` (`Id`, `BookId`)
 VALUES (@p0, @p1);
 SELECT @@ROWCOUNT;",
                 Sql);
@@ -123,22 +125,22 @@ SELECT @@ROWCOUNT;",
 @p2: 00000000-0000-0000-0000-000000000001
 
 SET NOCOUNT OFF;
-INSERT INTO [Sample] ([MaxLengthProperty], [Name], [RowVersion])
+INSERT INTO `Sample` (`MaxLengthProperty`, `Name`, `RowVersion`)
 VALUES (@p0, @p1, @p2);
-SELECT [UniqueNo]
-FROM [Sample]
-WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();
+SELECT `UniqueNo`
+FROM `Sample`
+WHERE @@ROWCOUNT = 1 AND `UniqueNo` = scope_identity();
 
 @p0: 
 @p1: 
 @p2: 00000000-0000-0000-0000-000000000002
 
 SET NOCOUNT OFF;
-INSERT INTO [Sample] ([MaxLengthProperty], [Name], [RowVersion])
+INSERT INTO `Sample` (`MaxLengthProperty`, `Name`, `RowVersion`)
 VALUES (@p0, @p1, @p2);
-SELECT [UniqueNo]
-FROM [Sample]
-WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
+SELECT `UniqueNo`
+FROM `Sample`
+WHERE @@ROWCOUNT = 1 AND `UniqueNo` = scope_identity();",
                 Sql);
         }
 
@@ -149,20 +151,20 @@ WHERE @@ROWCOUNT = 1 AND [UniqueNo] = scope_identity();",
             Assert.Equal(@"@p0: ValidString
 
 SET NOCOUNT OFF;
-INSERT INTO [Two] ([Data])
+INSERT INTO `Two` (`Data`)
 VALUES (@p0);
-SELECT [Id], [Timestamp]
-FROM [Two]
-WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+SELECT `Id`, `Timestamp`
+FROM `Two`
+WHERE @@ROWCOUNT = 1 AND `Id` = scope_identity();
 
 @p0: ValidButLongString
 
 SET NOCOUNT OFF;
-INSERT INTO [Two] ([Data])
+INSERT INTO `Two` (`Data`)
 VALUES (@p0);
-SELECT [Id], [Timestamp]
-FROM [Two]
-WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();",
+SELECT `Id`, `Timestamp`
+FROM `Two`
+WHERE @@ROWCOUNT = 1 AND `Id` = scope_identity();",
                 Sql);
         }
 
@@ -170,37 +172,37 @@ WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();",
         {
             base.TimestampAttribute_throws_if_value_in_database_changed();
 
-            Assert.Equal(@"SELECT TOP(1) [r].[Id], [r].[Data], [r].[Timestamp]
-FROM [Two] AS [r]
-WHERE [r].[Id] = 1
+            Assert.Equal(@"SELECT TOP(1) `r`.`Id`, `r`.`Data`, `r`.`Timestamp`
+FROM `Two` AS `r`
+WHERE `r`.`Id` = 1
 
-SELECT TOP(1) [r].[Id], [r].[Data], [r].[Timestamp]
-FROM [Two] AS [r]
-WHERE [r].[Id] = 1
+SELECT TOP(1) `r`.`Id`, `r`.`Data`, `r`.`Timestamp`
+FROM `Two` AS `r`
+WHERE `r`.`Id` = 1
 
 @p0: 1
 @p1: ModifiedData
-@p2: System.Byte[]
+@p2: System.Byte``
 
 SET NOCOUNT OFF;
-DECLARE @generated0 TABLE ([Timestamp] varbinary(8));
-UPDATE [Two] SET [Data] = @p1
-OUTPUT INSERTED.[Timestamp]
+DECLARE @generated0 TABLE (`Timestamp` varbinary(8));
+UPDATE `Two` SET `Data` = @p1
+OUTPUT INSERTED.`Timestamp`
 INTO @generated0
-WHERE [Id] = @p0 AND [Timestamp] = @p2;
-SELECT [Timestamp] FROM @generated0;
+WHERE `Id` = @p0 AND `Timestamp` = @p2;
+SELECT `Timestamp` FROM @generated0;
 
 @p0: 1
 @p1: ChangedData
-@p2: System.Byte[]
+@p2: System.Byte``
 
 SET NOCOUNT OFF;
-DECLARE @generated0 TABLE ([Timestamp] varbinary(8));
-UPDATE [Two] SET [Data] = @p1
-OUTPUT INSERTED.[Timestamp]
+DECLARE @generated0 TABLE (`Timestamp` varbinary(8));
+UPDATE `Two` SET `Data` = @p1
+OUTPUT INSERTED.`Timestamp`
 INTO @generated0
-WHERE [Id] = @p0 AND [Timestamp] = @p2;
-SELECT [Timestamp] FROM @generated0;",
+WHERE `Id` = @p0 AND `Timestamp` = @p2;
+SELECT `Timestamp` FROM @generated0;",
                 Sql);
         }
 

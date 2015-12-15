@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class DataAnnotationSqlServerFixture : DataAnnotationFixtureBase<MySqlTestStore>
+    public class DataAnnotationMySqlFixture : DataAnnotationFixtureBase<MySqlTestStore>
     {
         public static readonly string DatabaseName = "DataAnnotations";
 
@@ -16,7 +16,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
         private readonly string _connectionString = MySqlTestStore.CreateConnectionString(DatabaseName);
 
-        public DataAnnotationSqlServerFixture()
+        public DataAnnotationMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()

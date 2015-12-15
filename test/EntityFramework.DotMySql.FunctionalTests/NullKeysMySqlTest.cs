@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class NullKeysSqlServerTest : NullKeysTestBase<NullKeysSqlServerTest.NullKeysSqlServerFixture>
+    public class NullKeysMySqlTest : NullKeysTestBase<NullKeysMySqlTest.NullKeysSqlServerFixture>
     {
-        public NullKeysSqlServerTest(NullKeysSqlServerFixture fixture)
+        public NullKeysMySqlTest(NullKeysSqlServerFixture fixture)
             : base(fixture)
         {
         }

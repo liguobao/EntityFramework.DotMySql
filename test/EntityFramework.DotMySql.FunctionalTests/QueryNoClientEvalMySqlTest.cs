@@ -5,9 +5,9 @@ using Microsoft.Data.Entity.FunctionalTests;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class QueryNoClientEvalSqlServerTest : QueryNoClientEvalTestBase<QueryNoClientEvalSqlServerFixture>
+    public class QueryNoClientEvalMySqlTest : QueryNoClientEvalTestBase<QueryNoClientEvalSqlServerFixture>
     {
-        public QueryNoClientEvalSqlServerTest(QueryNoClientEvalSqlServerFixture fixture)
+        public QueryNoClientEvalMySqlTest(QueryNoClientEvalSqlServerFixture fixture)
             : base(fixture)
         {
         }

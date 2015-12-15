@@ -37,7 +37,7 @@ namespace Microsoft.Data.Entity.Storage.Internal
         private readonly RelationalTypeMapping _rowversion = new RelationalTypeMapping("TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", typeof(byte[]), DbType.Binary);
         private readonly MySqlMaxLengthMapping _nchar = new MySqlMaxLengthMapping("nchar", typeof(string), DbType.StringFixedLength);
         private readonly MySqlMaxLengthMapping _nvarchar = new MySqlMaxLengthMapping("nvarchar", typeof(string));
-        private readonly RelationalTypeMapping _varcharmax = new MySqlMaxLengthMapping("varchar(8000)", typeof(string), DbType.AnsiString);
+        private readonly RelationalTypeMapping _varcharmax = new MySqlMaxLengthMapping("longtext", typeof(string), DbType.AnsiString);
         
         private readonly MySqlMaxLengthMapping _varchar = new MySqlMaxLengthMapping("varchar", typeof(string), DbType.AnsiString);
         private readonly MySqlMaxLengthMapping _varchar450 = new MySqlMaxLengthMapping("varchar(450)", typeof(string), DbType.AnsiString);

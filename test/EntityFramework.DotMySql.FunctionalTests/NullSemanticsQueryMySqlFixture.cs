@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class NullSemanticsQuerySqlServerFixture : NullSemanticsQueryRelationalFixture<MySqlTestStore>
+    public class NullSemanticsQueryMySqlFixture : NullSemanticsQueryRelationalFixture<MySqlTestStore>
     {
         public static readonly string DatabaseName = "NullSemanticsQueryTest";
 
@@ -19,7 +19,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
         private readonly string _connectionString = MySqlTestStore.CreateConnectionString(DatabaseName);
 
-        public NullSemanticsQuerySqlServerFixture()
+        public NullSemanticsQueryMySqlFixture()
         {
             _serviceProvider = new ServiceCollection()
                 .AddEntityFramework()

@@ -14,7 +14,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
     public class NorthwindSprocQuerySqlServerFixture : NorthwindSprocQueryRelationalFixture, IDisposable
     {
-        private readonly IServiceProvider _serviceProvider;
+        /*private readonly IServiceProvider _serviceProvider;
         private readonly DbContextOptions _options;
         private readonly MySqlTestStore _testStore;
 
@@ -50,6 +50,15 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             return context;
         }
 
-        public void Dispose() => _testStore.Dispose();
+        public void Dispose() => _testStore.Dispose();*/
+        public override NorthwindContext CreateContext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
