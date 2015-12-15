@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using Microsoft.Data.Entity.FunctionalTests;
 using Microsoft.Data.Entity.FunctionalTests.TestModels.Northwind;
@@ -13,7 +14,7 @@ using System.Threading;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class QueryLoggingSqlServerTest : IClassFixture<NorthwindQueryMySqlFixture>
+    public class QueryLoggingMySqlTest : IClassFixture<NorthwindQueryMySqlFixture>
     {
         [Fact]
         public virtual void Queryable_simple()
@@ -32,12 +33,12 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 (QueryContext queryContext) => IEnumerable<Customer> _ShapedQuery(
     queryContext: queryContext, 
     shaperCommandContext: SelectExpression: 
-        SELECT [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region]
-        FROM [Customers] AS [c]
+        SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+        FROM `Customers` AS `c`
     , 
     shaper: UnbufferedEntityShaper`1
 )",
-                    TestSqlLoggerFactory.Log);
+                    Log);
             }
         }
 
@@ -79,9 +80,9 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
     innerResults: IEnumerable<Customer> _ShapedQuery(
         queryContext: queryContext, 
         shaperCommandContext: SelectExpression: 
-            SELECT [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region]
-            FROM [Customers] AS [c]
-            ORDER BY [c].[CustomerID]
+            SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+            FROM `Customers` AS `c`
+            ORDER BY `c`.`CustomerID`
         , 
         shaper: BufferedEntityShaper`1
     )
@@ -92,13 +93,13 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             relatedValueBuffers: IEnumerable<ValueBuffer> _Query(
                 queryContext: queryContext, 
                 shaperCommandContext: SelectExpression: 
-                    SELECT [o].[OrderID], [o].[CustomerID], [o].[EmployeeID], [o].[OrderDate]
-                    FROM [Orders] AS [o]
+                    SELECT `o`.`OrderID`, `o`.`CustomerID`, `o`.`EmployeeID`, `o`.`OrderDate`
+                    FROM `Orders` AS `o`
                     INNER JOIN (
-                        SELECT DISTINCT [c].[CustomerID]
-                        FROM [Customers] AS [c]
-                    ) AS [c] ON [o].[CustomerID] = [c].[CustomerID]
-                    ORDER BY [c].[CustomerID]
+                        SELECT DISTINCT `c`.`CustomerID`
+                        FROM `Customers` AS `c`
+                    ) AS `c` ON `o`.`CustomerID` = `c`.`CustomerID`
+                    ORDER BY `c`.`CustomerID`
                 , 
                 queryIndex: 1
             )
@@ -118,16 +119,21 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
     , 
     querySourceRequiresTracking: True
 )",
-                    TestSqlLoggerFactory.Log);
+                    Log);
             }
         }
 
         private readonly NorthwindQueryMySqlFixture _fixture;
 
-        public QueryLoggingSqlServerTest(NorthwindQueryMySqlFixture fixture)
+        public QueryLoggingMySqlTest(NorthwindQueryMySqlFixture fixture)
         {
             _fixture = fixture;
         }
+
+        private static string FileLineEnding = @"
+";
+
+        private static string Log => TestSqlLoggerFactory.Log.Replace(Environment.NewLine, FileLineEnding);
 
         protected NorthwindContext CreateContext() => _fixture.CreateContext();
     }
