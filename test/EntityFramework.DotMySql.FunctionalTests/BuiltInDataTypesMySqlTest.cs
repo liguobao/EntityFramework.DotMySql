@@ -91,7 +91,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 
 
                 var param9 = -1.2354F;
-
                 Assert.Same(entity, context.Set<BuiltInDataTypes>().Single(e => e.Id == 11 && e.TestSingle == param9));
 
                 var param10 = true;

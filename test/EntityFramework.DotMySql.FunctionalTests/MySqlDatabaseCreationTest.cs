@@ -64,7 +64,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     Assert.True(async ? await creator.ExistsAsync() : creator.Exists());
 
                     Assert.Equal(ConnectionState.Closed, context.Database.GetDbConnection().State);
+
+                    await creator.DeleteAsync();
                 }
+
+                
             }
         }
 
@@ -229,36 +233,36 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     await testStore.Connection.OpenAsync();
                 }
 
-                var tables = await testStore.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'");
+                var tables = await testStore.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='" + testStore.Connection.Database + "'");
                 Assert.Equal(1, tables.Count());
-                Assert.Equal("Blog", tables.Single());
+                Assert.Equal("blog", tables.Single());
 
                 var columns = (await testStore.QueryAsync<string>(
-                    "SELECT TABLE_NAME + '.' + COLUMN_NAME + ' (' + DATA_TYPE + ')' FROM INFORMATION_SCHEMA.COLUMNS  WHERE TABLE_NAME = 'Blog' ORDER BY TABLE_NAME, COLUMN_NAME")).ToArray();
+                    "SELECT CONCAT(TABLE_NAME, '.', COLUMN_NAME, ' (', COLUMN_TYPE, ')') FROM INFORMATION_SCHEMA.COLUMNS  WHERE TABLE_SCHEMA='" + testStore.Connection.Database + "' AND TABLE_NAME = 'Blog' ORDER BY TABLE_NAME, COLUMN_NAME")).ToArray();
                 Assert.Equal(19, columns.Length);
 
                 Assert.Equal(
                     new[]
                     {
-                        "Blog.AndChew (varbinary)",
-                        "Blog.AndRow (timestamp)",
-                        "Blog.Cheese (nvarchar)",
-                        "Blog.CupOfChar (int)",
-                        "Blog.ErMilan (int)",
-                        "Blog.Fuse (smallint)",
-                        "Blog.George (bit)",
-                        "Blog.Key1 (nvarchar)",
-                        "Blog.Key2 (varbinary)",
-                        "Blog.NotFigTime (datetime2)",
-                        "Blog.NotToEat (smallint)",
-                        "Blog.On (real)",
-                        "Blog.OrNothing (float)",
-                        "Blog.OrULong (int)",
-                        "Blog.OrUShort (numeric)",
-                        "Blog.OrUSkint (bigint)",
-                        "Blog.TheGu (uniqueidentifier)",
-                        "Blog.ToEat (tinyint)",
-                        "Blog.WayRound (bigint)"
+                        "blog.AndChew (varbinary(8000))",
+                        "blog.AndRow (timestamp)",
+                        "blog.Cheese (longtext)",
+                        "blog.CupOfChar (int(11))",
+                        "blog.ErMilan (int(11))",
+                        "blog.Fuse (smallint(6))",
+                        "blog.George (bit(1))",
+                        "blog.Key1 (varchar(450))",
+                        "blog.Key2 (varbinary(450))",
+                        "blog.NotFigTime (datetime)",
+                        "blog.NotToEat (tinyint(4))",
+                        "blog.On (float)",
+                        "blog.OrNothing (double)",
+                        "blog.OrULong (int(11))",
+                        "blog.OrUShort (double(20,0))",
+                        "blog.OrUSkint (bigint(20))",
+                        "blog.TheGu (char(38))",
+                        "blog.ToEat (tinyint(3) unsigned)",
+                        "blog.WayRound (bigint(20))"
                     },
                     columns);
             }
@@ -294,6 +298,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     }
 
                     Assert.Equal(ConnectionState.Closed, context.Database.GetDbConnection().State);
+
+                    context.Database.EnsureDeleted();
                 }
             }
         }

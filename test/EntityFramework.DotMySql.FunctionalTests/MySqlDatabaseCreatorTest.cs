@@ -38,6 +38,7 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var creator = GetDatabaseCreator(testDatabase);
 
                 Assert.False(async ? await creator.ExistsAsync() : creator.Exists());
+
             }
         }
 
@@ -60,6 +61,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var creator = GetDatabaseCreator(testDatabase);
 
                 Assert.True(async ? await creator.ExistsAsync() : creator.Exists());
+
+                await creator.DeleteAsync();
             }
         }
 
@@ -88,9 +91,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 if (errorNumber != 233) // skip if no-process transient failure
                 {
                     Assert.Equal(
-                        4060, // Login failed error number
+                        1049, // Login failed error number
                         errorNumber);
                 }
+
+
             }
         }
 
@@ -113,6 +118,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var creator = GetDatabaseCreator(testDatabase);
 
                 Assert.False(async ? await ((TestDatabaseCreator)creator).HasTablesAsyncBase() : ((TestDatabaseCreator)creator).HasTablesBase());
+
+                await creator.DeleteAsync();
             }
         }
 
@@ -132,11 +139,13 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             using (var testDatabase = await MySqlTestStore.CreateScratchAsync(createDatabase: true))
             {
-                await testDatabase.ExecuteNonQueryAsync("CREATE TABLE SomeTable (Id char(38,0))");
+                await testDatabase.ExecuteNonQueryAsync("CREATE TABLE SomeTable (Id char(38))");
 
                 var creator = GetDatabaseCreator(testDatabase);
 
                 Assert.True(async ? await ((TestDatabaseCreator)creator).HasTablesAsyncBase() : ((TestDatabaseCreator)creator).HasTablesBase());
+
+                await creator.DeleteAsync();
             }
         }
 
@@ -201,6 +210,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 {
                     Assert.Throws<MySqlException>(() => creator.Delete());
                 }
+
+
             }
         }
 
@@ -248,14 +259,16 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                         await testDatabase.Connection.OpenAsync();
                     }
 
-                    var tables = await testDatabase.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'");
+                    var tables = await testDatabase.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + testDatabase.Connection.Database + "'");
                     Assert.Equal(1, tables.Count());
-                    Assert.Equal("Blog", tables.Single());
+                    Assert.Equal("blog", tables.Single().ToLower());
 
-                    var columns = await testDatabase.QueryAsync<string>("SELECT TABLE_NAME + '.' + COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Blog'");
+                    var columns = await testDatabase.QueryAsync<string>("SELECT CONCAT(CONCAT(TABLE_NAME,'.'),COLUMN_NAME) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" + testDatabase.Connection.Database + "' AND TABLE_NAME = 'Blog'");
                     Assert.Equal(2, columns.Count());
-                    Assert.True(columns.Any(c => c == "Blog.Id"));
-                    Assert.True(columns.Any(c => c == "Blog.Name"));
+                    Assert.True(columns.Any(c => c == "blog.Id"));
+                    Assert.True(columns.Any(c => c == "blog.Name"));
+
+                    await creator.DeleteAsync();
                 }
             }
         }
@@ -286,9 +299,11 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 if (errorNumber != 233) // skip if no-process transient failure
                 {
                     Assert.Equal(
-                        4060, // Login failed error number
+                        1049, // Login failed error number
                         errorNumber);
                 }
+
+                
             }
         }
 
@@ -328,14 +343,14 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                     await testDatabase.Connection.OpenAsync();
                 }
 
-                Assert.Equal(0, (await testDatabase.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'")).Count());
+                Assert.Equal(0, (await testDatabase.QueryAsync<string>("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + testDatabase.Connection.Database + "'")).Count());
 
-                Assert.True(await testDatabase.ExecuteScalarAsync<bool>(
+                /*Assert.True(await testDatabase.ExecuteScalarAsync<bool>(
                     string.Concat(
                         "SELECT is_read_committed_snapshot_on FROM sys.databases WHERE name='",
                         testDatabase.Connection.Database,
                         "'"),
-                    CancellationToken.None));
+                    CancellationToken.None));*/
             }
         }
 
@@ -358,10 +373,12 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
                 var creator = GetDatabaseCreator(testDatabase);
 
                 Assert.Equal(
-                    1801, // Database with given name already exists
+                    1007, // Database with given name already exists
                     async
                         ? (await Assert.ThrowsAsync<MySqlException>(() => creator.CreateAsync())).Number
                         : Assert.Throws<MySqlException>(() => creator.Create()).Number);
+
+                await creator.DeleteAsync();
             }
         }
 
