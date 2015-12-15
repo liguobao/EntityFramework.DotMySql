@@ -369,6 +369,14 @@ namespace Microsoft.Data.Entity.Migrations
                 }
             }
 
+            if (defaultValue != null)
+            {
+                if (type == "longtext")
+                {
+                    defaultValue = null;
+                }
+            }
+
             base.ColumnDefinition(
                 schema,
                 table,

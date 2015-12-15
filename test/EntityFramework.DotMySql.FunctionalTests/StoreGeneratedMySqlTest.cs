@@ -8,21 +8,21 @@ using EntityFramework.DotMySql.Extensions;
 
 namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
 {
-    public class StoreGeneratedSqlServerTest
-        : StoreGeneratedTestBase<MySqlTestStore, StoreGeneratedSqlServerTest.StoreGeneratedSqlServerFixture>
+    public class StoreGeneratedMySqlTest
+        : StoreGeneratedTestBase<MySqlTestStore, StoreGeneratedMySqlTest.StoreGeneratedMySqlFixture>
     {
-        public StoreGeneratedSqlServerTest(StoreGeneratedSqlServerFixture fixture)
+        public StoreGeneratedMySqlTest(StoreGeneratedMySqlFixture fixture)
             : base(fixture)
         {
         }
 
-        public class StoreGeneratedSqlServerFixture : StoreGeneratedFixtureBase
+        public class StoreGeneratedMySqlFixture : StoreGeneratedFixtureBase
         {
             private const string DatabaseName = "StoreGeneratedTest";
 
             private readonly IServiceProvider _serviceProvider;
 
-            public StoreGeneratedSqlServerFixture()
+            public StoreGeneratedMySqlFixture()
             {
                 _serviceProvider = new ServiceCollection()
                     .AddEntityFramework()
