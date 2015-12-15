@@ -28,12 +28,12 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             base.Skip();
 
             Assert.Equal(
-               @"SELECT [t0].[CustomerID], [t0].[Address], [t0].[City], [t0].[CompanyName], [t0].[ContactName], [t0].[ContactTitle], [t0].[Country], [t0].[Fax], [t0].[Phone], [t0].[PostalCode], [t0].[Region]
-FROM (
-    SELECT [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region], ROW_NUMBER() OVER(ORDER BY [c].[CustomerID]) AS [__RowNumber__]
-    FROM [Customers] AS [c]
-) AS [t0]
-WHERE [t0].[__RowNumber__] > 5",
+               @"@__p_0: 5
+
+SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+FROM `Customers` AS `c`
+ORDER BY `c`.`CustomerID`
+LIMIT 18446744073709551610 OFFSET @__p_0",
                Sql);
         }
 
@@ -42,12 +42,11 @@ WHERE [t0].[__RowNumber__] > 5",
             base.Skip_no_orderby();
 
             Assert.EndsWith(
-                @"SELECT [t0].[CustomerID], [t0].[Address], [t0].[City], [t0].[CompanyName], [t0].[ContactName], [t0].[ContactTitle], [t0].[Country], [t0].[Fax], [t0].[Phone], [t0].[PostalCode], [t0].[Region]
-FROM (
-    SELECT [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region], ROW_NUMBER() OVER(ORDER BY @@RowCount) AS [__RowNumber__]
-    FROM [Customers] AS [c]
-) AS [t0]
-WHERE [t0].[__RowNumber__] > 5",
+                @"@__p_0: 5
+
+SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+FROM `Customers` AS `c`
+LIMIT 18446744073709551610 OFFSET @__p_0",
                 Sql);
         }
 
@@ -56,12 +55,13 @@ WHERE [t0].[__RowNumber__] > 5",
             base.Skip_Take();
 
             Assert.Equal(
-                @"SELECT [t0].[CustomerID], [t0].[Address], [t0].[City], [t0].[CompanyName], [t0].[ContactName], [t0].[ContactTitle], [t0].[Country], [t0].[Fax], [t0].[Phone], [t0].[PostalCode], [t0].[Region]
-FROM (
-    SELECT [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region], ROW_NUMBER() OVER(ORDER BY [c].[ContactName]) AS [__RowNumber__]
-    FROM [Customers] AS [c]
-) AS [t0]
-WHERE ([t0].[__RowNumber__] > 5) AND ([t0].[__RowNumber__] <= 15)",
+                @"@__p_1: 10
+@__p_0: 5
+
+SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+FROM `Customers` AS `c`
+ORDER BY `c`.`ContactName`
+LIMIT @__p_1 OFFSET @__p_0",
                 Sql);
         }
 
@@ -69,13 +69,14 @@ WHERE ([t0].[__RowNumber__] > 5) AND ([t0].[__RowNumber__] <= 15)",
         {
             base.Join_Customers_Orders_Skip_Take();
             Assert.Equal(
-                @"SELECT [t0].[ContactName], [t0].[OrderID]
-FROM (
-    SELECT [c].[ContactName], [o].[OrderID], ROW_NUMBER() OVER(ORDER BY [o].[OrderID]) AS [__RowNumber__]
-    FROM [Customers] AS [c]
-    INNER JOIN [Orders] AS [o] ON [c].[CustomerID] = [o].[CustomerID]
-) AS [t0]
-WHERE ([t0].[__RowNumber__] > 10) AND ([t0].[__RowNumber__] <= 15)",
+                @"@__p_1: 5
+@__p_0: 10
+
+SELECT `c`.`ContactName`, `o`.`OrderID`
+FROM `Customers` AS `c`
+INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`
+ORDER BY `o`.`OrderID`
+LIMIT @__p_1 OFFSET @__p_0",
                 Sql);
         }
 
@@ -83,13 +84,14 @@ WHERE ([t0].[__RowNumber__] > 10) AND ([t0].[__RowNumber__] <= 15)",
         {
             base.Join_Customers_Orders_Projection_With_String_Concat_Skip_Take();
             Assert.Equal(
-                @"SELECT [t0].[c0], [t0].[OrderID]
-FROM (
-    SELECT ([c].[ContactName] + ' ') + [c].[ContactTitle] AS [c0], [o].[OrderID], ROW_NUMBER() OVER(ORDER BY [o].[OrderID]) AS [__RowNumber__]
-    FROM [Customers] AS [c]
-    INNER JOIN [Orders] AS [o] ON [c].[CustomerID] = [o].[CustomerID]
-) AS [t0]
-WHERE ([t0].[__RowNumber__] > 10) AND ([t0].[__RowNumber__] <= 15)",
+                @"@__p_1: 5
+@__p_0: 10
+
+SELECT CONCAT(CONCAT(`c`.`ContactName`,' '),`c`.`ContactTitle`), `o`.`OrderID`
+FROM `Customers` AS `c`
+INNER JOIN `Orders` AS `o` ON `c`.`CustomerID` = `o`.`CustomerID`
+ORDER BY `o`.`OrderID`
+LIMIT @__p_1 OFFSET @__p_0",
                 Sql);
         }
 
@@ -97,16 +99,18 @@ WHERE ([t0].[__RowNumber__] > 10) AND ([t0].[__RowNumber__] <= 15)",
         {
             base.Take_Skip();
 
-            Assert.Equal(@"SELECT [t1].*
+            Assert.Equal(@"@__p_0: 10
+@__p_1: 5
+
+SELECT `t0`.*
 FROM (
-    SELECT [t0].*, ROW_NUMBER() OVER(ORDER BY [t0].[ContactName]) AS [__RowNumber__]
-    FROM (
-        SELECT TOP(10) [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region]
-        FROM [Customers] AS [c]
-        ORDER BY [c].[ContactName]
-    ) AS [t0]
-) AS [t1]
-WHERE [t1].[__RowNumber__] > 5",
+    SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+    FROM `Customers` AS `c`
+    ORDER BY `c`.`ContactName`
+    LIMIT @__p_0
+) AS `t0`
+ORDER BY `t0`.`ContactName`
+LIMIT 18446744073709551610 OFFSET @__p_1",
                 Sql);
         }
 
@@ -115,19 +119,21 @@ WHERE [t1].[__RowNumber__] > 5",
             base.Take_Skip_Distinct();
 
             Assert.Equal(
-                @"SELECT DISTINCT [t1].*
+                @"@__p_0: 10
+@__p_1: 5
+
+SELECT DISTINCT `t1`.*
 FROM (
-    SELECT [t2].*
+    SELECT `t0`.*
     FROM (
-        SELECT [t0].*, ROW_NUMBER() OVER(ORDER BY [t0].[ContactName]) AS [__RowNumber__]
-        FROM (
-            SELECT TOP(10) [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region]
-            FROM [Customers] AS [c]
-            ORDER BY [c].[ContactName]
-        ) AS [t0]
-    ) AS [t2]
-    WHERE [t2].[__RowNumber__] > 5
-) AS [t1]",
+        SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+        FROM `Customers` AS `c`
+        ORDER BY `c`.`ContactName`
+        LIMIT @__p_0
+    ) AS `t0`
+    ORDER BY `t0`.`ContactName`
+    LIMIT 18446744073709551610 OFFSET @__p_1
+) AS `t1`",
                 Sql);
         }
 
@@ -135,35 +141,39 @@ FROM (
         {
             base.Take_skip_null_coalesce_operator();
 
-            Assert.Equal(@"SELECT DISTINCT [t1].*
+            Assert.Equal(@"@__p_0: 10
+@__p_1: 5
+
+SELECT DISTINCT `t1`.*
 FROM (
-    SELECT [t2].*
+    SELECT `t0`.*
     FROM (
-        SELECT [t0].*, ROW_NUMBER() OVER(ORDER BY COALESCE([t0].[Region], 'ZZ')) AS [__RowNumber__]
-        FROM (
-            SELECT TOP(10) [c].[CustomerID], [c].[Address], [c].[City], [c].[CompanyName], [c].[ContactName], [c].[ContactTitle], [c].[Country], [c].[Fax], [c].[Phone], [c].[PostalCode], [c].[Region]
-            FROM [Customers] AS [c]
-            ORDER BY COALESCE([c].[Region], 'ZZ')
-        ) AS [t0]
-    ) AS [t2]
-    WHERE [t2].[__RowNumber__] > 5
-) AS [t1]", Sql);
+        SELECT `c`.`CustomerID`, `c`.`Address`, `c`.`City`, `c`.`CompanyName`, `c`.`ContactName`, `c`.`ContactTitle`, `c`.`Country`, `c`.`Fax`, `c`.`Phone`, `c`.`PostalCode`, `c`.`Region`
+        FROM `Customers` AS `c`
+        ORDER BY COALESCE(`c`.`Region`, 'ZZ')
+        LIMIT @__p_0
+    ) AS `t0`
+    ORDER BY COALESCE(`t0`.`Region`, 'ZZ')
+    LIMIT 18446744073709551610 OFFSET @__p_1
+) AS `t1`", Sql);
         }
 
         public override void Select_take_skip_null_coalesce_operator()
         {
             base.Select_take_skip_null_coalesce_operator();
 
-            Assert.Equal(@"SELECT [t1].*
+            Assert.Equal(@"@__p_0: 10
+@__p_1: 5
+
+SELECT `t0`.*
 FROM (
-    SELECT [t0].*, ROW_NUMBER() OVER(ORDER BY [Coalesce]) AS [__RowNumber__]
-    FROM (
-        SELECT TOP(10) [c].[CustomerID], [c].[CompanyName], COALESCE([c].[Region], 'ZZ') AS [Coalesce]
-        FROM [Customers] AS [c]
-        ORDER BY [Coalesce]
-    ) AS [t0]
-) AS [t1]
-WHERE [t1].[__RowNumber__] > 5", Sql);
+    SELECT `c`.`CustomerID`, `c`.`CompanyName`, COALESCE(`c`.`Region`, 'ZZ') AS `Coalesce`
+    FROM `Customers` AS `c`
+    ORDER BY `Coalesce`
+    LIMIT @__p_0
+) AS `t0`
+ORDER BY `Coalesce`
+LIMIT 18446744073709551610 OFFSET @__p_1", Sql);
         }
 
         public override void String_Contains_Literal()
