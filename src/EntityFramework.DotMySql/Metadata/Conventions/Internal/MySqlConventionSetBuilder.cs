@@ -3,7 +3,7 @@
 
 // ReSharper disable once CheckNamespace
 
-using EntityFramework.DotMySql.Metadata.Conventions.Internal;
+using Microsoft.Data.Entity.Metadata.Conventions.Internal;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Storage;
 using Microsoft.Data.Entity.Utilities;

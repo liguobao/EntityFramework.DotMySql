@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Conventions.Internal;
 using Microsoft.Data.Entity.Metadata.Internal;
 
-namespace EntityFramework.DotMySql.Metadata.Conventions.Internal
+namespace Microsoft.Data.Entity.Metadata.Conventions.Internal
 {
     public class MySqlValueGenerationStrategyConvention : IModelConvention
     {
