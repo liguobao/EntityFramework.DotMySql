@@ -26,18 +26,6 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         {
             var db = MySqlTestStore.CreateScratch();
 
-            using (var command = db.Connection.CreateCommand())
-            {
-                command.CommandText = "ALTER DATABASE [" + db.Connection.Database + "] SET ALLOW_SNAPSHOT_ISOLATION ON";
-                command.ExecuteNonQuery();
-            }
-
-            using (var command = db.Connection.CreateCommand())
-            {
-                command.CommandText = "ALTER DATABASE [" + db.Connection.Database + "] SET READ_COMMITTED_SNAPSHOT ON";
-                command.ExecuteNonQuery();
-            }
-
             using (var context = CreateContext(db))
             {
                 Seed(context);
