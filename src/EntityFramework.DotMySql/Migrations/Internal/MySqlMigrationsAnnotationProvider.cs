@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EntityFramework.DotMySql.Metadata;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Internal;

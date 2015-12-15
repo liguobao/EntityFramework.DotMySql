@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EntityFramework.DotMySql.Metadata;
 using JetBrains.Annotations;
-using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Builders;
 using Microsoft.Data.Entity.Utilities;
 
-namespace EntityFramework.DotMySql.Extensions
+namespace Microsoft.Data.Entity
 {
     public static class MySqlPropertyBuilderExtension
     {

@@ -7,8 +7,8 @@ using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Internal;
 
-namespace EntityFramework.DotMySql.Metadata
-{
+namespace Microsoft.Data.Entity.Metadata
+{ 
     public class MySqlPropertyAnnotations : RelationalPropertyAnnotations, IMySqlPropertyAnnotations
     {
         public MySqlPropertyAnnotations([NotNull] IProperty property, [CanBeNull] string providerPrefix) : base(property, providerPrefix)

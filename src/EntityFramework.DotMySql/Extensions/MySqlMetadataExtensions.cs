@@ -1,4 +1,4 @@
-using EntityFramework.DotMySql.Metadata;
+
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Internal;

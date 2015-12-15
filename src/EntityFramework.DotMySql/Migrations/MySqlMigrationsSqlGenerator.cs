@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using EntityFramework.DotMySql.Metadata;
 using JetBrains.Annotations;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
