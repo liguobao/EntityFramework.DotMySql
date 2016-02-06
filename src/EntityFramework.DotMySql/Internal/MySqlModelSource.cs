@@ -12,8 +12,10 @@ namespace Microsoft.Data.Entity.Internal
     {
         public MySqlModelSource(
             [NotNull] IDbSetFinder setFinder,
-            [NotNull] ICoreConventionSetBuilder coreConventionSetBuilder)
-            : base(setFinder, coreConventionSetBuilder)
+            [NotNull] ICoreConventionSetBuilder coreConventionSetBuilder,
+            [NotNull] IModelCustomizer modelCustomizer,
+            [NotNull] IModelCacheKeyFactory modelCacheKeyFactory)
+            : base(setFinder, coreConventionSetBuilder, modelCustomizer, modelCacheKeyFactory)
         {
         }
     }

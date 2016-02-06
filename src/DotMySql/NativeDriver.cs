@@ -376,7 +376,7 @@ namespace MySql.Data.MySqlClient
                 new RemoteCertificateValidationCallback(ServerCheckValidation);
             SslStream ss = new SslStream(baseStream, true, sslValidateCallback, null);
             X509CertificateCollection certs = GetClientCertificates();
-            await ss.AuthenticateAsClientAsync(Settings.Server, certs, SslProtocols.Ssl3 | SslProtocols.Tls, false);
+            await ss.AuthenticateAsClientAsync(Settings.Server, certs, SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12, false);
             baseStream = ss;
             stream = new MySqlStream(ss, Encoding, false);
             stream.SequenceByte = 2;

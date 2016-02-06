@@ -19,10 +19,12 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
         public TestMySqlModelSource(
             Action<ModelBuilder> onModelCreating,
             IDbSetFinder setFinder,
-            ICoreConventionSetBuilder coreConventionSetBuilder)
-            : base(setFinder,  coreConventionSetBuilder)
+            ICoreConventionSetBuilder coreConventionSetBuilder,
+            IModelCustomizer modelCustomizer,
+            IModelCacheKeyFactory modelCacheKeyFactory)
+            : base(setFinder,  coreConventionSetBuilder, modelCustomizer, modelCacheKeyFactory)
         {
-            _testModelSource = new TestModelSource(onModelCreating, setFinder, coreConventionSetBuilder);
+            _testModelSource = new TestModelSource(onModelCreating, setFinder, coreConventionSetBuilder, modelCustomizer, modelCacheKeyFactory);
         }
 
         public override IModel GetModel(DbContext context, IConventionSetBuilder conventionSetBuilder, IModelValidator validator) 
@@ -32,6 +34,8 @@ namespace Microsoft.Data.Entity.SqlServer.FunctionalTests
             => p => new TestMySqlModelSource(
                 onModelCreating,
                 p.GetRequiredService<IDbSetFinder>(),
-                p.GetRequiredService<ICoreConventionSetBuilder>());
+                p.GetRequiredService<ICoreConventionSetBuilder>(),
+                p.GetRequiredService<IModelCustomizer>(),
+                p.GetRequiredService<IModelCacheKeyFactory>());
     }
 }
